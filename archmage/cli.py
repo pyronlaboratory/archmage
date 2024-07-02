@@ -73,7 +73,6 @@ def message(code=OK, msg=""):
 
 
 def usage(code=OK, msg=""):
-    """Show application usage and quit"""
     message(code, __doc__ % globals())
     message(code, msg)
     sys.exit(code)
