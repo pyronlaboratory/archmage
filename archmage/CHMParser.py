@@ -33,8 +33,6 @@ END_TAG = "]"
 
 
 class SitemapFile(object):
-    """Sitemap file class"""
-
     def __init__(self, lines):
         # XXX: Cooking tasty beautiful soup ;-)
         if lines:

@@ -97,7 +97,6 @@ class FileSource:
 class DirSource:
     def __init__(self, dirname):
         self.dirname = dirname
-
     def listdir(self):
         entries = []
         for dir, _, files in os.walk(self.dirname):
@@ -106,20 +105,16 @@ class DirSource:
                     "/" + os.path.relpath(os.path.join(dir, f), self.dirname)
                 )
         return entries
-
     def get(self, filename):
         with open(self.dirname + filename, "rb") as fh:
             if fh is None:
                 return None
             return fh.read()
-
     def close(self):
         pass
 
 
 class CHM:
-    """Class that represent CHM content from directory"""
-
     def __init__(self, name):
         self.cache = {}
         # Name of source directory with CHM content
