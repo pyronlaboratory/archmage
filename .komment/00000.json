@@ -1,0 +1,1158 @@
+[
+  {
+    "name": "CHM.py",
+    "path": "archmage/CHM.py",
+    "content": {
+      "structured": {
+        "description": "A `CHMEntry` class for handling CHM file entries, which are extracted from a provided list of files using `htmldoc`. The `htmldoc` function takes in a list of input files and options, and it converts them into a new output format specified by the options. The `CHMEntry` class provides methods for reading and correcting CHM entry content, including lower-casing links and restoring framing if necessary. The code also defines an `Entry` class for representing individual CHM file entries, which can be used to extract their content using the `read` method.",
+        "items": [
+          {
+            "id": "a1032161-c5ee-659f-6940-683a9341b6b6",
+            "ancestors": [],
+            "description": "Enumerates possible actions to perform on CHM files, including extracting content, dumping HTML, converting CHM to text or HTML, and converting CHM to PDF.",
+            "attributes": [
+              {
+                "name": "EXTRACT",
+                "type_name": "Enum",
+                "description": "1."
+              },
+              {
+                "name": "DUMPHTML",
+                "type_name": "INT",
+                "description": "2 in value, representing the action of dumping HTML content."
+              },
+              {
+                "name": "CHM2TXT",
+                "type_name": "Integer",
+                "description": "3, representing the conversion of CHM files to text format."
+              },
+              {
+                "name": "CHM2HTML",
+                "type_name": "Integer",
+                "description": "4 in value, representing the action of converting CHM files to HTML format."
+              },
+              {
+                "name": "CHM2PDF",
+                "type_name": "int",
+                "description": "5th in the list of available actions, representing the conversion of CHM files to PDF format."
+              }
+            ],
+            "name": "Action",
+            "location": {
+              "start": 52,
+              "insert": 53,
+              "offset": " ",
+              "indent": 4,
+              "comment": null
+            },
+            "item_type": "class",
+            "length": 6,
+            "docLength": null
+          },
+          {
+            "id": "26b2bf03-9d72-5381-774d-c6665032d7f6",
+            "ancestors": [],
+            "description": "Provides methods for listing and retrieving files from a CHM file, as well as closing the file handle.",
+            "attributes": [
+              {
+                "name": "_chm",
+                "type_name": "chmlibChm",
+                "description": "Used to manage a CHM (Compact HTML) file."
+              }
+            ],
+            "name": "FileSource",
+            "location": {
+              "start": 63,
+              "insert": 64,
+              "offset": " ",
+              "indent": 4,
+              "comment": null
+            },
+            "item_type": "class",
+            "length": 32,
+            "docLength": null
+          },
+          {
+            "id": "334dee8c-f71c-1f8a-c042-0276c0c3917e",
+            "ancestors": [
+              "26b2bf03-9d72-5381-774d-c6665032d7f6"
+            ],
+            "description": "Within the `FileSource` class enumerates and stores the file paths in a list when passed a valid input path.",
+            "params": [],
+            "returns": {
+              "type_name": "Liststr",
+              "description": "A list of strings containing the file paths from the directory being scanned."
+            },
+            "name": "listdir",
+            "location": {
+              "start": 67,
+              "insert": 68,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 16,
+            "docLength": null
+          },
+          {
+            "id": "ef48bc90-fc29-50b7-f547-03baf8bd9d2f",
+            "ancestors": [
+              "26b2bf03-9d72-5381-774d-c6665032d7f6",
+              "334dee8c-f71c-1f8a-c042-0276c0c3917e"
+            ],
+            "description": "Takes a ChM file, user input, and output parameters, and appends the path of the user-provided file to the output list if it is not the root directory.",
+            "params": [
+              {
+                "name": "chmfile",
+                "type_name": "object",
+                "description": "Used to represent a file path for the CHM file being processed."
+              },
+              {
+                "name": "ui",
+                "type_name": "chmfilePath",
+                "description": "Used to store the decoded path of a file."
+              },
+              {
+                "name": "out",
+                "type_name": "stdvectorstdstring",
+                "description": "Used to store the path of the file."
+              }
+            ],
+            "returns": {
+              "type_name": "chmlibCHM_ENUMERATOR_CONTINUE",
+              "description": "A enumerated value that indicates whether the function should continue iterating over the file names or stop."
+            },
+            "name": "get_name",
+            "location": {
+              "start": 68,
+              "insert": 69,
+              "offset": " ",
+              "indent": 12,
+              "comment": null
+            },
+            "item_type": "function",
+            "length": 5,
+            "docLength": null
+          },
+          {
+            "id": "a8291b52-d72a-ad81-6f45-4a7150f32e81",
+            "ancestors": [
+              "26b2bf03-9d72-5381-774d-c6665032d7f6"
+            ],
+            "description": "Resolves an object in the Chm library, retrieves its contents, and returns them as a string.",
+            "params": [
+              {
+                "name": "name",
+                "type_name": "str",
+                "description": "Used to specify the object to resolve."
+              }
+            ],
+            "returns": {
+              "type_name": "object",
+              "description": "A `content`."
+            },
+            "name": "get",
+            "location": {
+              "start": 84,
+              "insert": 85,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 8,
+            "docLength": null
+          },
+          {
+            "id": "1828f65e-010c-aeb7-3e4e-6504fbe63ee4",
+            "ancestors": [],
+            "description": "Provides methods for listing and reading files in a directory, along with a method to close the source.",
+            "attributes": [
+              {
+                "name": "dirname",
+                "type_name": "str",
+                "description": "A string representing the root directory for listing files."
+              }
+            ],
+            "name": "DirSource",
+            "location": {
+              "start": 97,
+              "insert": 98,
+              "offset": " ",
+              "indent": 4,
+              "comment": null
+            },
+            "item_type": "class",
+            "length": 18,
+            "docLength": null
+          },
+          {
+            "id": "fd2b763a-2248-e39a-b244-43c1029a7594",
+            "ancestors": [
+              "1828f65e-010c-aeb7-3e4e-6504fbe63ee4"
+            ],
+            "description": "Within a class `DirSource` recursively traverses subdirectories and appends file paths to a list.",
+            "params": [],
+            "returns": {
+              "type_name": "list",
+              "description": "A container object that stores a sequence of entry points."
+            },
+            "name": "listdir",
+            "location": {
+              "start": 100,
+              "insert": 101,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 8,
+            "docLength": null
+          },
+          {
+            "id": "b2982155-053b-b180-cb47-9b6d229b325a",
+            "ancestors": [
+              "1828f65e-010c-aeb7-3e4e-6504fbe63ee4"
+            ],
+            "description": "Retrieves a file from a directory by opening it in binary mode and returning its contents if successful, or `None` if an error occurs.",
+            "params": [
+              {
+                "name": "filename",
+                "type_name": "str",
+                "description": "Used to specify the name of the file to be read from the directory."
+              }
+            ],
+            "returns": {
+              "type_name": "Optionalbytes",
+              "description": "A representation of the contents of a file."
+            },
+            "name": "get",
+            "location": {
+              "start": 108,
+              "insert": 109,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 5,
+            "docLength": null
+          },
+          {
+            "id": "3a5b7404-300f-1e93-434b-24cdeb90fd27",
+            "ancestors": [],
+            "description": "Extracts CHM content from a given source directory and generates HTML, PDF or CHM files based on user input. It also provides methods for processing templates, extracting entries, and dumping HTML contents.",
+            "attributes": [
+              {
+                "name": "cache",
+                "type_name": "dict",
+                "description": "Used to store the results of previous calls to methods such as `deftopic`, `frontpage`, `templates`, and `get_template`. It allows for faster execution of these methods by avoiding redundant computation."
+              },
+              {
+                "name": "source",
+                "type_name": "instanceobject",
+                "description": "Used to store the source file path or URL from which the CHM content is being extracted."
+              },
+              {
+                "name": "sourcename",
+                "type_name": "str",
+                "description": "Used to specify the source name for chm2text conversion."
+              },
+              {
+                "name": "__dict__",
+                "type_name": "instance",
+                "description": "Used to store the attributes and methods of the class as a dictionary, allowing them to be accessed directly without having to use the class name and dot notation."
+              },
+              {
+                "name": "aux_re",
+                "type_name": "regular",
+                "description": "Used to match any malicious or unwanted names that may appear in the CHM files, such as parent references or malicious content."
+              },
+              {
+                "name": "auxes",
+                "type_name": "instance",
+                "description": "A list of regular expressions that match malicious or unwanted content, such as HTML tags or URLs."
+              },
+              {
+                "name": "topicstree",
+                "type_name": "TOCCounter",
+                "description": "Used to store the hierarchy of topics in a CHM file. It represents the number of top-level categories (or \"tocs\") in the file, and can be used to determine the maximum level of indentation for nested topics."
+              },
+              {
+                "name": "topics",
+                "type_name": "instanceclass",
+                "description": "A list of topic names that are contained within the CHM file, indicating the hierarchy of topics in the file."
+              },
+              {
+                "name": "contents",
+                "type_name": "str",
+                "description": "Used to store the HTML contents of a CHM file, which can be extracted using the `extract_entry()` method."
+              }
+            ],
+            "name": "CHM",
+            "location": {
+              "start": 117,
+              "insert": 118,
+              "offset": " ",
+              "indent": 4,
+              "comment": null
+            },
+            "item_type": "class",
+            "length": 277,
+            "docLength": null
+          },
+          {
+            "id": "5a2a1664-3fa2-b09e-ee4f-e61972d8291c",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Of the `CHM` class initializes object attributes and performs actions on them. It creates a dictionary for caching, loads sources from files or directories using DirSource or FileSource classes, and defines auxilary regular expressions. Finally, it sets up a topics tree and contents using the `topics()` method.",
+            "params": [
+              {
+                "name": "name",
+                "type_name": "str",
+                "description": "Used to specify the path to the configuration file."
+              }
+            ],
+            "returns": null,
+            "name": "__init__",
+            "location": {
+              "start": 118,
+              "insert": 119,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 21,
+            "docLength": null
+          },
+          {
+            "id": "82dba042-4bbe-5bba-0a4c-234162e68e1a",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Retrieves and caches a list of entries from a subfunction `_entries()` within the `CHM` class, returning the cached value.",
+            "params": [],
+            "returns": {
+              "type_name": "list",
+              "description": "A cache of entries."
+            },
+            "name": "entries",
+            "location": {
+              "start": 147,
+              "insert": 148,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "cdb1e676-359b-e5aa-b84c-4f74824a5d07",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "In the `CHM` class retrieves and caches a list of HTML files. If the cache does not exist, it calls the `_html_files` method to generate the list and stores it in the cache for future use.",
+            "params": [],
+            "returns": {
+              "type_name": "list",
+              "description": "A cache of the method's internal _html_files() call."
+            },
+            "name": "html_files",
+            "location": {
+              "start": 158,
+              "insert": 159,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "0b24e16e-36f7-1786-1142-4de2617add0c",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Within the CHM class takes its instance's topicstree as input and returns a list of pages generated from it using PageLister().",
+            "name": "_html_files",
+            "location": {
+              "start": 163,
+              "insert": 164,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "da80cda4-ddd2-f3ba-ef43-2cef0f49cda1",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Retrieves and stores image URLs in a cache for later use by the `CHM` class.",
+            "params": [],
+            "returns": {
+              "type_name": "list",
+              "description": "A cache of image URLs."
+            },
+            "name": "image_urls",
+            "location": {
+              "start": 170,
+              "insert": 171,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "586f7751-ed4c-129a-8f49-df26c4c74098",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Within the CHM class takes an input of self.html_files() and generates a list of image URLs by using ImageCatcher to feed each file and then appending the image URL to a list if it is not already present.",
+            "name": "_image_urls",
+            "location": {
+              "start": 175,
+              "insert": 176,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 13,
+            "docLength": null
+          },
+          {
+            "id": "41cf721c-a0a4-acb3-8e4a-12a732a0f969",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "In the `CHM` class retrieves or caches an image file list.",
+            "params": [],
+            "returns": {
+              "type_name": "list",
+              "description": "The result of calling the private method `_image_files`."
+            },
+            "name": "image_files",
+            "location": {
+              "start": 192,
+              "insert": 193,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "d81f600f-102b-fb94-5345-cbaa687ecfbd",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "For a `CHM` class iterates through image URLs and entries, updating an output dictionary with image URLs and their corresponding entries if the URL matches the entry and hasn't been already recorded.",
+            "name": "_image_files",
+            "location": {
+              "start": 197,
+              "insert": 198,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 10,
+            "docLength": null
+          },
+          {
+            "id": "16071b04-7720-d194-dc49-00e98a3ed8c3",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Retrieves and caches a list of topics from the `_topics()` method, which is not shown in the snippet. The cached list is returned when called again.",
+            "params": [],
+            "returns": {
+              "type_name": "dict",
+              "description": "A cache of the topics data."
+            },
+            "name": "topics",
+            "location": {
+              "start": 209,
+              "insert": 210,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "7c163836-8686-5493-9248-351809dc0611",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Within a class named CHM, searches for entries with a `.hhc` extension and returns an Entry object with additional parameters.",
+            "name": "_topics",
+            "location": {
+              "start": 214,
+              "insert": 215,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 10,
+            "docLength": null
+          },
+          {
+            "id": "ece3926c-01cc-5e99-d340-e322f3578fd1",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "In the `CHM` class checks if the \"deftopic\" key is absent in the cache, and if not, it retrieves the value from the `_deftopic` method and stores it in the cache.",
+            "params": [],
+            "returns": {
+              "type_name": "object",
+              "description": "Stored in a cache."
+            },
+            "name": "deftopic",
+            "location": {
+              "start": 226,
+              "insert": 227,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "837479ca-b4a4-7495-3c41-36950e6a85e3",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Determines and returns the topic of an HTML file based on its name, replacing any leading `/` characters and lowercasing the result.",
+            "name": "_deftopic",
+            "location": {
+              "start": 231,
+              "insert": 232,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "ba5c1f1c-1ccf-4292-b646-2b2183395aff",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Retrieves and caches the front page of a web application if it hasn't been cached before, otherwise it returns the cached value.",
+            "params": [],
+            "returns": {
+              "type_name": "object",
+              "description": "Stored in the cache if it has not been previously set."
+            },
+            "name": "frontpage",
+            "location": {
+              "start": 237,
+              "insert": 238,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "8c85fb61-092c-21b0-db43-caa9e17fbe97",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Determines the front page of a website by iterating over a list of filenames, checking if each one is the front page, and if so, renaming it with a numbered version of the name.",
+            "name": "_frontpage",
+            "location": {
+              "start": 242,
+              "insert": 243,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 7,
+            "docLength": null
+          },
+          {
+            "id": "63e00282-e10f-30a3-e647-7f84ca4277c7",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Retrieves a cache of pre-defined templates for an instance of the `CHM` class, or creates and stores a new set of templates if none exist in the cache.",
+            "params": [],
+            "returns": {
+              "type_name": "dict",
+              "description": "A cache of templates for the current user."
+            },
+            "name": "templates",
+            "location": {
+              "start": 252,
+              "insert": 253,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "a08b45bf-5f68-aa8c-1541-bd64f0e7ef77",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "In the CHM class lists all files in the templates directory and returns a list of file paths that are not already stored as entries in the class's `entries` attribute.",
+            "name": "_templates",
+            "location": {
+              "start": 257,
+              "insert": 258,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 7,
+            "docLength": null
+          },
+          {
+            "id": "a4cf5aaa-658b-c384-0340-5b1b29fb704e",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "In the `CHM` class retrieves and stores the toclevels of an object in its cache, if not already present.",
+            "params": [],
+            "returns": {
+              "type_name": "dict",
+              "description": "A cache of toclevels data obtained through the `_toclevels` method call."
+            },
+            "name": "toclevels",
+            "location": {
+              "start": 266,
+              "insert": 267,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": null
+          },
+          {
+            "id": "c32cb4d5-1905-79b7-2d44-c84c6d3b4353",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Within the CHM class takes a given string and counts the levels of indentation in it, returning the maximum level detected or the actual count if it's lower than the maximum level set by the `maxtoclvl` attribute.",
+            "name": "_toclevels",
+            "location": {
+              "start": 271,
+              "insert": 272,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 7,
+            "docLength": null
+          },
+          {
+            "id": "ec3c5889-74b6-ad90-864f-d60ff4577862",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Retrieves an HTML template from the specified location and substitutes placeholder values with the class's properties: title, contents, deftopic, bcolor, and fcolor.",
+            "params": [
+              {
+                "name": "name",
+                "type_name": "str",
+                "description": "Passed in as an argument, which represents the name of the template to be retrieved."
+              }
+            ],
+            "returns": {
+              "type_name": "stringTemplate",
+              "description": "A modified version of a template file based on user input and predefined variables."
+            },
+            "name": "get_template",
+            "location": {
+              "start": 280,
+              "insert": 281,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 280,
+                "end": 281
+              }
+            },
+            "item_type": "method",
+            "length": 15,
+            "docLength": 1
+          },
+          {
+            "id": "e5a7fed5-5069-3299-f04c-5c88a48c33b0",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Of the CHM class writes the templates in the `self.templates()` list to the specified destination directory, creating new files if necessary. It also copies the icons from the `self.icons_dir` to the destination directory if it does not already exist.",
+            "params": [
+              {
+                "name": "destdir",
+                "type_name": "str",
+                "description": "Used to specify the directory where the templates will be written. It has an default value of \".\"."
+              }
+            ],
+            "returns": null,
+            "name": "process_templates",
+            "location": {
+              "start": 297,
+              "insert": 298,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 297,
+                "end": 298
+              }
+            },
+            "item_type": "method",
+            "length": 13,
+            "docLength": 1
+          },
+          {
+            "id": "50d3f998-186c-11b6-8249-55a4229311a3",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Within the `CHM` class extracts an entry from a source file and writes it to a specified output file, creating directories as necessary for the entry's file name.",
+            "params": [
+              {
+                "name": "entry",
+                "type_name": "Entry",
+                "description": "Used to represent an entry in a file or directory."
+              },
+              {
+                "name": "output_file",
+                "type_name": "osPathlike",
+                "description": "Used to specify the output file path where the extracted entry will be saved."
+              },
+              {
+                "name": "destdir",
+                "type_name": "str",
+                "description": "Used to specify the directory where the extracted entry will be saved. It has an default value of \".\", which means the current working directory."
+              },
+              {
+                "name": "correct",
+                "type_name": "bool",
+                "description": "Used to indicate whether the entry should be corrected or not during extraction."
+              }
+            ],
+            "returns": null,
+            "name": "extract_entry",
+            "location": {
+              "start": 312,
+              "insert": 314,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 24,
+            "docLength": null
+          },
+          {
+            "id": "eb340487-aa84-699f-2948-b7d486246f87",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "In the `CHM` class takes an optional list of entries, checks if each entry matches the auxilary regular expression pattern, and extracts the entry if it matches. If the entry is a parent directory, it raises a RuntimeError. Otherwise, it extracts the entry to the specified destination directory and sets the correct flag to `True`.",
+            "params": [
+              {
+                "name": "entries",
+                "type_name": "list",
+                "description": "Represented as `[e for e in entries]`. It refers to the list of strings that contain file names or paths to be extracted."
+              },
+              {
+                "name": "destdir",
+                "type_name": "str",
+                "description": "Used to specify the destination directory for extracted entries."
+              },
+              {
+                "name": "correct",
+                "type_name": "bool",
+                "description": "Used to indicate whether the entry should be extracted correctly or not."
+              }
+            ],
+            "returns": null,
+            "name": "extract_entries",
+            "location": {
+              "start": 342,
+              "insert": 343,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 342,
+                "end": 343
+              }
+            },
+            "item_type": "method",
+            "length": 9,
+            "docLength": 1
+          },
+          {
+            "id": "ade8c741-ae13-8bbe-774d-cd8ebfeed547",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Of the `CHM` class creates a directory if it does not exist, then extracts entries and templates into that directory using `os.mkdir` and `os.copyfile`. If the destination directory already exists, the function exits with an error message.",
+            "params": [
+              {
+                "name": "destdir",
+                "type_name": "str",
+                "description": "Used to specify the destination directory for extraction."
+              }
+            ],
+            "returns": null,
+            "name": "extract",
+            "location": {
+              "start": 354,
+              "insert": 355,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 354,
+                "end": 355
+              }
+            },
+            "item_type": "method",
+            "length": 8,
+            "docLength": 1
+          },
+          {
+            "id": "8a0b5574-b3fb-05ba-484f-117c901c7d7c",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Iterates over a list of HTML files and prints out entry information for each file that matches a specified regular expression.",
+            "params": [
+              {
+                "name": "output",
+                "type_name": "object",
+                "description": "Used to print the output of the function."
+              }
+            ],
+            "returns": null,
+            "name": "dump_html",
+            "location": {
+              "start": 367,
+              "insert": 368,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 367,
+                "end": 368
+              }
+            },
+            "item_type": "method",
+            "length": 10,
+            "docLength": 1
+          },
+          {
+            "id": "55addae6-e7ab-35a6-6649-7c8c23d39c34",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Takes an input file and produces a text representation of its content using the CHM tool.",
+            "params": [
+              {
+                "name": "output",
+                "type_name": "object",
+                "description": "Used to write the generated text to the output stream."
+              }
+            ],
+            "returns": null,
+            "name": "chm2text",
+            "location": {
+              "start": 380,
+              "insert": 381,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 380,
+                "end": 381
+              }
+            },
+            "item_type": "method",
+            "length": 11,
+            "docLength": 1
+          },
+          {
+            "id": "d385e46e-024f-81b5-954b-5bfc02cbc193",
+            "ancestors": [
+              "3a5b7404-300f-1e93-434b-24cdeb90fd27"
+            ],
+            "description": "Extracts CHM content into a temporary directory, processes the content using the specified format (CHM2HTML or CHM2PDF), and generates an output file based on the input files and options provided.",
+            "params": [
+              {
+                "name": "output",
+                "type_name": "str",
+                "description": "Used to specify the output file path for the generated HTML document, with the format option determining whether the output is in CHM2HTML or CHM2PDF format."
+              },
+              {
+                "name": "format",
+                "type_name": "str",
+                "description": "Used to specify the output format of the HTML documentation, which can be either CHM2HTML or CHM2PDF."
+              }
+            ],
+            "returns": null,
+            "name": "htmldoc",
+            "location": {
+              "start": 395,
+              "insert": 396,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 395,
+                "end": 396
+              }
+            },
+            "item_type": "method",
+            "length": 33,
+            "docLength": 1
+          },
+          {
+            "id": "fd32e403-3c61-6fa1-f44c-d30a8a7f744f",
+            "ancestors": [],
+            "description": "Manages entry content, performing actions such as reading, lowercasing links, and adding restore framing JavaScript code.",
+            "attributes": [
+              {
+                "name": "source",
+                "type_name": "object",
+                "description": "Used to store the source content of the entry."
+              },
+              {
+                "name": "name",
+                "type_name": "str",
+                "description": "Used to store the name of the entry."
+              },
+              {
+                "name": "filename_case",
+                "type_name": "str",
+                "description": "Used to modify the filename case of the entry content during the correction process."
+              },
+              {
+                "name": "restore_framing",
+                "type_name": "bool",
+                "description": "Used to indicate whether framing links should be restored when the entry's content is read."
+              },
+              {
+                "name": "frontpage",
+                "type_name": "ospathbasename",
+                "description": "Used to specify the name of a file with which the framing will be restored."
+              }
+            ],
+            "name": "Entry",
+            "location": {
+              "start": 438,
+              "insert": 439,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 438,
+                "end": 439
+              }
+            },
+            "item_type": "class",
+            "length": 74,
+            "docLength": 1
+          },
+          {
+            "id": "9faa469f-a5c7-6e91-d34e-65621169832b",
+            "ancestors": [
+              "fd32e403-3c61-6fa1-f44c-d30a8a7f744f"
+            ],
+            "description": "Initializes an `Entry` object by setting instance variables from arguments passed, including source code, name, and front page file name.",
+            "params": [
+              {
+                "name": "source",
+                "type_name": "object",
+                "description": "Used to store the source code of a web page."
+              },
+              {
+                "name": "name",
+                "type_name": "str",
+                "description": "Used to set the name of the web page being initialized."
+              },
+              {
+                "name": "filename_case",
+                "type_name": "str",
+                "description": "Used to set the name of the file containing the HTML front page, with the option to restore the original framing of the file's path."
+              },
+              {
+                "name": "restore_framing",
+                "type_name": "bool",
+                "description": "Used to control whether the framing of the HTML file should be restored after it has been modified."
+              },
+              {
+                "name": "frontpage",
+                "type_name": "ospathbasename",
+                "description": "Set to the value of \"index.html\" by default."
+              }
+            ],
+            "returns": null,
+            "name": "__init__",
+            "location": {
+              "start": 441,
+              "insert": 450,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 13,
+            "docLength": null
+          },
+          {
+            "id": "68aef71b-bd37-4a8e-0f43-99b969d8dcec",
+            "ancestors": [
+              "fd32e403-3c61-6fa1-f44c-d30a8a7f744f"
+            ],
+            "description": "Replaces all occurrences of URLs with lowercase letters in the given text.",
+            "params": [
+              {
+                "name": "text",
+                "type_name": "str",
+                "description": "Passed to the regular expression sub method to be modified by replacing certain attributes with lowercase versions."
+              }
+            ],
+            "returns": {
+              "type_name": "str",
+              "description": "The result of applying a regular expression substitution to the given input `text`."
+            },
+            "name": "lower_links",
+            "location": {
+              "start": 461,
+              "insert": 462,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 461,
+                "end": 462
+              }
+            },
+            "item_type": "method",
+            "length": 6,
+            "docLength": 1
+          },
+          {
+            "id": "ac18365f-3010-4aa5-c04c-adf8fc663eb5",
+            "ancestors": [
+              "fd32e403-3c61-6fa1-f44c-d30a8a7f744f"
+            ],
+            "description": "Modifies JavaScript code to add a link for framing to the page's HTML body tag, based on the page's name and depth of nested frames.",
+            "params": [
+              {
+                "name": "name",
+                "type_name": "str",
+                "description": "Used to generate a JavaScript code for restoring framing based on the provided name."
+              },
+              {
+                "name": "text",
+                "type_name": "encoded",
+                "description": "14 characters long."
+              }
+            ],
+            "returns": {
+              "type_name": "str",
+              "description": "A modified version of the given `text` string with the inclusion of a script tag that links to the framing page."
+            },
+            "name": "add_restoreframing_js",
+            "location": {
+              "start": 469,
+              "insert": 470,
+              "offset": " ",
+              "indent": 8,
+              "comment": null
+            },
+            "item_type": "method",
+            "length": 14,
+            "docLength": null
+          },
+          {
+            "id": "e6e8baa6-5118-70a4-7c40-ecf062c4ffd9",
+            "ancestors": [
+              "fd32e403-3c61-6fa1-f44c-d30a8a7f744f"
+            ],
+            "description": "Reads data from an instance of the `self` class, modifies it by removing certain tags and attributes, and returns the modified data.",
+            "params": [],
+            "returns": {
+              "type_name": "str",
+              "description": "A modified version of the input data, where certain HTML tags and patterns have been removed or replaced."
+            },
+            "name": "correct",
+            "location": {
+              "start": 484,
+              "insert": 485,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 484,
+                "end": 485
+              }
+            },
+            "item_type": "method",
+            "length": 21,
+            "docLength": 1
+          },
+          {
+            "id": "b606d85c-c10c-d9af-7c4e-4ed163104542",
+            "ancestors": [
+              "fd32e403-3c61-6fa1-f44c-d30a8a7f744f"
+            ],
+            "description": "In the Entry class reads entry content, performs various modifications based on configuration options, and returns the modified content or the default value '````.",
+            "params": [],
+            "returns": {
+              "type_name": "str",
+              "description": "The content of an entry."
+            },
+            "name": "get",
+            "location": {
+              "start": 510,
+              "insert": 511,
+              "offset": " ",
+              "indent": 8,
+              "comment": {
+                "start": 510,
+                "end": 511
+              }
+            },
+            "item_type": "method",
+            "length": 12,
+            "docLength": 1
+          }
+        ]
+      }
+    }
+  }
+]
