@@ -33,16 +33,14 @@ else:
 
 def file2dir(filename):
     """
-    Extracts the directory name from a file name by splitting the filename with a
-    dot and taking the first component as the directory name, then appends "html"
-    to it.
+    Takes a filename as input and returns the corresponding directory name by
+    concatenating the file name with an underscore and the string "html".
 
     Args:
-        filename (str): Passed as an argument to the function, which then uses it
-            to create a directory path.
+        filename (str): The name of a file to convert into a directory path.
 
     Returns:
-        str: A directory path based on the filename without the file extension.
+        str: The concatenation of the directory name and `_html`.
 
     """
     dirname = filename.rsplit(".", 1)[0] + "_" + "html"
