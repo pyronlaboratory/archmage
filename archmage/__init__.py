@@ -32,6 +32,18 @@ else:
 
 
 def file2dir(filename):
-    """Convert file filename.chm to filename_html directory"""
+    """
+    Extracts the directory name from a file name by splitting the filename with a
+    dot and taking the first component as the directory name, then appends "html"
+    to it.
+
+    Args:
+        filename (str): Passed as an argument to the function, which then uses it
+            to create a directory path.
+
+    Returns:
+        str: A directory path based on the filename without the file extension.
+
+    """
     dirname = filename.rsplit(".", 1)[0] + "_" + "html"
     return dirname

@@ -1154,5 +1154,46 @@
         ]
       }
     }
+  },
+  {
+    "name": "__init__.py",
+    "path": "archmage/__init__.py",
+    "content": {
+      "structured": {
+        "description": "A function `file2dir()` that takes a file name as input and returns the corresponding directory name. The function uses the `os` and `pkg_resources` packages to manipulate file paths. Specifically, it checks if a user-specific configuration file exists, and if not, uses a system-wide configuration file instead.",
+        "items": [
+          {
+            "id": "685b1fd7-f85c-0fa9-004a-9b7ff76e5bfc",
+            "ancestors": [],
+            "description": "Extracts the directory name from a file name by splitting the filename with a dot and taking the first component as the directory name, then appends \"html\" to it.",
+            "params": [
+              {
+                "name": "filename",
+                "type_name": "str",
+                "description": "Passed as an argument to the function, which then uses it to create a directory path."
+              }
+            ],
+            "returns": {
+              "type_name": "str",
+              "description": "A directory path based on the filename without the file extension."
+            },
+            "name": "file2dir",
+            "location": {
+              "start": 34,
+              "insert": 35,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 34,
+                "end": 35
+              }
+            },
+            "item_type": "function",
+            "length": 3,
+            "docLength": 1
+          }
+        ]
+      }
+    }
   }
 ]
