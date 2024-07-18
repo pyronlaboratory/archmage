@@ -4,37 +4,37 @@
     "path": "archmage/CHM.py",
     "content": {
       "structured": {
-        "description": "A class `CHMEntry` that can read and manipulate CHM entry content. It provides methods for reading the entry content, lower-casing links, restoring framing if necessary, and returning the final content. The class utilizes the `re` module for regular expression pattern matching and substitution, as well as the `os` module for working with file paths.",
+        "description": "an Archmage class that helps in extracting information from CHM files. It provides various methods for parsing and manipulating the content of CHM files, including:\n\n* `extract`: Extracts the contents of a CHM file into a directory specified by the user.\n* `dump_html`: Dumps the HTML content of a CHM file to standard output.\n* `htmldoc`: Converts a CHM file to other file formats, such as HTML or PDF, using htmldoc.\n* `Entry`: Represents an entry in a CHM file, with properties such as name, filename case, and restore framing.\n\nThe code also includes classes for handling the specifics of CHM files, including:\n\n* `chmtotext`: A function used by the `htmldoc` method to convert CHM files to text.\n* `chmtopdf`: A function used by the `htmldoc` method to convert CHM files to PDF.\n* `Entry.read`: Reads the content of an entry from the CHM file.\n* `Entry.correct`: Corrects the content of an entry by lower-casing links and removing unwanted HTML elements.\n* `Entry.get`: Gets the content of an entry from the CHM file.",
         "items": [
           {
-            "id": "b1068d58-9517-d394-ab4d-78a86a09ae6d",
+            "id": "ee79cd85-b80d-b6a0-a04b-6631fc2cb00f",
             "ancestors": [],
-            "description": "Defines five enums representing different actions for handling CHM files: `EXTRACT`, `DUMPHTML`, `CHM2TXT`, `CHM2HTML`, and `CHM2PDF`.",
+            "description": "Defines five constants representing different actions for working with HTML files, including extracting content, dumping HTML, converting from CHM to TXT or HTML, and converting from CHM to PDF.",
             "attributes": [
               {
                 "name": "EXTRACT",
-                "type_name": "Enum",
-                "description": "1."
+                "type_name": "int",
+                "description": "1, indicating that the action extracts information from a source file."
               },
               {
                 "name": "DUMPHTML",
                 "type_name": "int",
-                "description": "2 in value, indicating that it performs the action of dumping HTML content to a file or directory."
+                "description": "2 in value, indicating that it extracts HTML content from a CHM file."
               },
               {
                 "name": "CHM2TXT",
-                "type_name": "3digit",
-                "description": "3-dimensional, meaning it can be any combination of three values: 1, 2, or 3."
+                "type_name": "str",
+                "description": "3 in value, indicating that it converts CHM files to plain text format."
               },
               {
                 "name": "CHM2HTML",
                 "type_name": "int",
-                "description": "4th in the enumeration, representing the action of converting CHM files to HTML format."
+                "description": "4th in the enumeration, representing the action of converting Chemistry Markup Language (ChemML) files to HTML format."
               },
               {
                 "name": "CHM2PDF",
-                "type_name": "Integer",
-                "description": "5, indicating that it is a method for converting Chemical Markup Language (ChemML) files to Portable Document Format (PDF) files."
+                "type_name": "int",
+                "description": "5, which represents the action of converting CHM files to PDF format."
               }
             ],
             "name": "Action",
@@ -50,14 +50,14 @@
             "docLength": null
           },
           {
-            "id": "7579e699-523b-6881-0a47-d4e051a98a2f",
+            "id": "11fd6495-617d-95aa-6d42-f8f74f7cb06f",
             "ancestors": [],
-            "description": "Provides methods for listing and retrieving files from a CHM (Help File) file, as well as a `close()` method to release resources when no longer needed.",
+            "description": "Provides methods to list and retrieve files from a CHM file.",
             "attributes": [
               {
                 "name": "_chm",
-                "type_name": "chmlibChmFile",
-                "description": "Used to manage a CHM file."
+                "type_name": "chmlibchm_t",
+                "description": "A handle to a CHM file, which allows for reading and manipulation of its contents."
               }
             ],
             "name": "FileSource",
@@ -73,15 +73,20 @@
             "docLength": null
           },
           {
-            "id": "daa6841b-d2b9-8e8e-504b-5cbf3be8cc28",
+            "id": "3b1e8c84-fde4-b388-cf4d-d551bae55a87",
             "ancestors": [
-              "7579e699-523b-6881-0a47-d4e051a98a2f"
+              "11fd6495-617d-95aa-6d42-f8f74f7cb06f"
             ],
-            "description": "Within the `FileSource` class enumerates files and directories within a Chemical Document Management (CDM) file using the `chm_enumerate` function from the CHMLIB library. It appends the path of each file or directory to a list (`out`) and returns the list.",
+            "description": "Iterates over all files in a ChM (Chemical Markup) file and appends their paths to a list.",
             "params": [],
             "returns": {
-              "type_name": "Liststr",
-              "description": "An enumerated list of file paths from a given Chemistry Machine (CHM) file."
+              "type_name": "List[str]",
+              "description": "A list of strings containing the file paths in the specified directory."
+            },
+            "usage": {
+              "language": "python",
+              "code": ">>> filesource = FileSource(\"path/to/chm/file\")\n>>> filelist = filesource.listdir()\n>>> print(filelist)\n['/', '/directory/', '/directory/file1', '/directory/file2']\n",
+              "description": ""
             },
             "name": "listdir",
             "location": {
@@ -96,32 +101,37 @@
             "docLength": null
           },
           {
-            "id": "6a0d73ad-6118-24a7-e142-b36d69ae0cc0",
+            "id": "354c452c-7f80-8bbb-9845-4543cf6023a6",
             "ancestors": [
-              "7579e699-523b-6881-0a47-d4e051a98a2f",
-              "daa6841b-d2b9-8e8e-504b-5cbf3be8cc28"
+              "11fd6495-617d-95aa-6d42-f8f74f7cb06f",
+              "3b1e8c84-fde4-b388-cf4d-d551bae55a87"
             ],
-            "description": "Takes a `chmfile`, `ui`, and `out` parameters, and appends the path to a list if it is not the root directory `/`.",
+            "description": "Retrieves the path to a Chemical Name file based on user input and appends it to a list before returning the CHM enumerator's continuation value.",
             "params": [
               {
                 "name": "chmfile",
-                "type_name": "object",
-                "description": "Used to represent a file path."
+                "type_name": "File",
+                "description": "Passed as an argument to the function, indicating the file from which the name will be extracted."
               },
               {
                 "name": "ui",
-                "type_name": "chmfilePath",
-                "description": "Used to store the path of the UI file."
+                "type_name": "chmlib.UI",
+                "description": "Used to store a path that is passed from the user interface."
               },
               {
                 "name": "out",
-                "type_name": "stdvectorstdstring",
-                "description": "Used to store the paths of the files found in the given directory."
+                "type_name": "List[str]",
+                "description": "Used to store the path of files that are returned from the function."
               }
             ],
             "returns": {
-              "type_name": "chmlibCHM_ENUMERATOR_CONTINUE",
-              "description": "A  value returned by the CHM enumerator."
+              "type_name": "chmlibCHM_ENUMERATOR_CONTINUE|str",
+              "description": "A continue flag indicating whether to continue processing the next item in the CHM file or not."
+            },
+            "usage": {
+              "language": "python",
+              "code": "chmfile = chmlib.CHMFile(\"path/to/file\")\nui = chmfile.get_info()\nout = []\nget_name(chmfile, ui, out)\nprint(out[0]) # prints the path of the file\n",
+              "description": ""
             },
             "name": "get_name",
             "location": {
@@ -136,21 +146,26 @@
             "docLength": null
           },
           {
-            "id": "db571898-3c06-8ea2-ed42-9e1703dc7db0",
+            "id": "1eca3a8e-5fbe-e698-c047-c70de725ea0b",
             "ancestors": [
-              "7579e699-523b-6881-0a47-d4e051a98a2f"
+              "11fd6495-617d-95aa-6d42-f8f74f7cb06f"
             ],
-            "description": "Resolves an object in the CHM file using the `chmlib.chm_resolve_object()` method, retrieves the contents of the resolved object using the `chmlib.chm_retrieve_object()` method, and returns the retrieved content.",
+            "description": "Resolves an object in the CHM file using the `chmlib.chm_resolve_object()` function, retrieves the contents of the resolved object using the `chmlib.chm_retrieve_object()` function, and returns the contents as a string.",
             "params": [
               {
                 "name": "name",
                 "type_name": "str",
-                "description": "Used to resolve an object in the CHM library."
+                "description": "Used to retrieve an object from the CHM file."
               }
             ],
             "returns": {
-              "type_name": "object",
-              "description": "A resolved and retrieved object from the CHM library."
+              "type_name": "bytes",
+              "description": "A slice of memory containing the contents of an object in the CHM file."
+            },
+            "usage": {
+              "language": "python",
+              "code": "source = FileSource(\"my_chm_file\")\ncontent = source.get(\"/path/to/object\")\nif content is not None:\n    # use the content as needed\n",
+              "description": ""
             },
             "name": "get",
             "location": {
@@ -165,14 +180,14 @@
             "docLength": null
           },
           {
-            "id": "b361e6f9-be15-cd83-ef4f-00a57f460145",
+            "id": "2d77a959-9560-f6a7-da43-ced9c284dd70",
             "ancestors": [],
-            "description": "Provides methods for listing directory contents and reading file contents, along with a `close()` method for cleaning up resources.",
+            "description": "Provides a directory-based file system interface, offering methods for listing files and reading their contents.",
             "attributes": [
               {
                 "name": "dirname",
                 "type_name": "str",
-                "description": "Initialized in the constructor with the value passed as argument to the constructor. It represents \nthe root directory of the source files to be listed or read from."
+                "description": "Initialized to the directory path provided during initialization, representing the root directory for which file listings are retrieved and files are read."
               }
             ],
             "name": "DirSource",
@@ -188,15 +203,20 @@
             "docLength": null
           },
           {
-            "id": "fb950074-17aa-7e94-f34d-7b69b7826cab",
+            "id": "9edf52d7-0b71-8381-9e43-8116c3b8f886",
             "ancestors": [
-              "b361e6f9-be15-cd83-ef4f-00a57f460145"
+              "2d77a959-9560-f6a7-da43-ced9c284dd70"
             ],
-            "description": "Recursively traverses subdirectories of a specified directory and returns a list of relative file paths within those subdirectories.",
+            "description": "Iterates through all subdirectories and files within a specified directory, and returns a list of relative paths to each file.",
             "params": [],
             "returns": {
-              "type_name": "list",
-              "description": "A collection of strings representing the file paths relative to the directory path provided as an argument."
+              "type_name": "List[str]",
+              "description": "A list of file paths relative to the directory specified in the class instance attribute `dirname`."
+            },
+            "usage": {
+              "language": "python",
+              "code": "from dir_source import DirSource\n\n# Create a DirSource object with the desired directory path\nds = DirSource(\"path/to/directory\")\n\n# Use the listdir method to get a list of all files in the directory and its subdirectories\nfiles = ds.listdir()\nprint(files)\n",
+              "description": ""
             },
             "name": "listdir",
             "location": {
@@ -211,21 +231,26 @@
             "docLength": null
           },
           {
-            "id": "e60dca59-3017-558d-ba4a-ff8899ee5700",
+            "id": "4696b749-398f-b4b4-4c45-306078d2b06b",
             "ancestors": [
-              "b361e6f9-be15-cd83-ef4f-00a57f460145"
+              "2d77a959-9560-f6a7-da43-ced9c284dd70"
             ],
-            "description": "Within the `DirSource` class reads a file from a specified directory and returns its contents as a binary read stream.",
+            "description": "Retrieves a file from the directory and reads it into memory as a bytes object, returning the contents of the file if successful, or `None` otherwise.",
             "params": [
               {
                 "name": "filename",
                 "type_name": "str",
-                "description": "Used to specify the file name to read from."
+                "description": "Used to specify the file name to be read from the directory."
               }
             ],
             "returns": {
-              "type_name": "object",
-              "description": "The result of reading a file from a specified directory and file name."
+              "type_name": "bytes",
+              "description": "The contents of a file located in the directory specified by `self.dirname and filename`."
+            },
+            "usage": {
+              "language": "python",
+              "code": "dir_source = DirSource(\"/path/to/directory\")\nfile = dir_source.get(\"example.txt\")\nif file is None:\n    print(\"File not found.\")\nelse:\n    # Process the contents of the file here.\n    # ...\n    # Close the file handle when done.\n    file.close()\n",
+              "description": "\nIn this example, a DirSource object is created by passing in the path to a directory as an argument to the constructor. The get method is then called on the DirSource object with the name of the file within the directory as its argument. If the file does not exist, it will return None. Otherwise, it will open the file for reading and return the file handle. The end-user can then process the contents of the file and close the file handle when they are done."
             },
             "name": "get",
             "location": {
@@ -240,54 +265,54 @@
             "docLength": null
           },
           {
-            "id": "5eab4266-49a5-e1a4-434d-9cca34158fd1",
+            "id": "eb67e853-94da-208d-f142-0d86f2408add",
             "ancestors": [],
-            "description": "Manages the extraction and processing of CHM files, including creating a temporary directory for storing extracted content, and executing various commands to create HTML or PDF outputs. It also provides methods for extracting individual entries from the CHM file and manipulating images within the file.",
+            "description": "Represents a CHM (HyperText Markup Language) file, providing methods to extract entries, templates, and images from the file and save them in a specified directory. It also offers the ability to process templates, extract entries, and create an HTML document from the extracted content.",
             "attributes": [
               {
                 "name": "cache",
-                "type_name": "instance",
-                "description": "Used to keep track of the files that have been extracted from a CHM file. It stores a set of tuples, each containing the file name and its corresponding path."
+                "type_name": "Dict[str,Any]",
+                "description": "Used to store intermediate results of the CHM file generator, such as the list of HTML files, the list of image URLs, and other metadata."
               },
               {
                 "name": "source",
-                "type_name": "instance",
-                "description": "Used to represent the source file or directory from which the CHM content will be extracted."
+                "type_name": "Union[DirSource,FileSource]",
+                "description": "Used to represent the source of the CHM file, which can be either a directory or a file."
               },
               {
                 "name": "sourcename",
-                "type_name": "str",
-                "description": "Used to store the source name or path from where the CHM files are extracted."
+                "type_name": "str|str",
+                "description": "Used to store the source name of a CHM file."
               },
               {
                 "name": "__dict__",
-                "type_name": "instance",
-                "description": "A dictionary containing all the attributes and methods of the class, which can be accessed by their name."
+                "type_name": "Dict[str,Any]",
+                "description": "Used to store the instance variables of the class. It contains the values of the attributes and methods of the class, which can be accessed using their attribute names."
               },
               {
                 "name": "aux_re",
-                "type_name": "regular",
-                "description": "Used to match names that are not valid CHM entries but may still be interesting or problematic, such as parent directories or malicious filenames."
+                "type_name": "RegexMatcher|str",
+                "description": "Used to filter out non-HTML entries from the CHM file's contents."
               },
               {
                 "name": "auxes",
-                "type_name": "list",
-                "description": "Used to store regular expressions for matching entries that should be skipped \nduring extraction. The regular expressions are used to identify malicious or \nundesirable entries in the CHM file."
+                "type_name": "Union[str,List[str]]",
+                "description": "Used to store a list of strings that represent regular expressions for auxilary file names in the CHM file."
               },
               {
                 "name": "topicstree",
-                "type_name": "instance",
-                "description": "A list of tuples, where each tuple contains a topic name and a list of subtopics related to that topic. It is used to store the hierarchical structure of the CHM document's topics."
+                "type_name": "Union[DirSource,FileSource]",
+                "description": "Used to store the source of the topic tree."
               },
               {
                 "name": "topics",
-                "type_name": "instance",
-                "description": "A list of tuples, where each tuple contains a topic name and a list of file paths that belong to that topic. It is used to keep track of the files related to each topic in the CHM document."
+                "type_name": "List[str]",
+                "description": "Used to store a list of topics for which the CHM file contains content."
               },
               {
                 "name": "contents",
-                "type_name": "str",
-                "description": "Used to store a list of file paths that are extracted from the CHM file using the `extract_entries()` method."
+                "type_name": "Dict[str,str]",
+                "description": "A container for the contents of the CHM file, which can include HTML files, image files, and other data."
               }
             ],
             "name": "CHM",
@@ -303,19 +328,24 @@
             "docLength": null
           },
           {
-            "id": "45446724-3667-3495-2642-1aee807927f9",
+            "id": "10c52afe-95a7-96b0-b443-6008cc922b22",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Initializes an instance of `CHM` by setting member variables, compiling code from a configuration file, and creating a `SitemapFile` object to store the topic tree.",
+            "description": "Initializes instance variables and performs various actions, including:\n\n* Setting cache and source directories\n* Reading and executing configuration file contents\n* Creating an auxillary regular expression for topic searching\n* Parsing a topics tree and setting `topicstree` attribute.",
             "params": [
               {
                 "name": "name",
-                "type_name": "str",
-                "description": "Used to set the name of the configuration file or directory being initialized."
+                "type_name": "Union[str, Path]",
+                "description": "Used to specify the source file or directory for which the Sitemap class will generate content."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "chm = CHM(\"path/to/myfile.chm\")\nfor entry in chm.entries():\n    # do something with each file or directory entry\n    print(entry)\nchm.close()\n",
+              "description": ""
+            },
             "name": "__init__",
             "location": {
               "start": 118,
@@ -324,20 +354,25 @@
               "indent": 8,
               "comment": null
             },
-            "item_type": "method",
+            "item_type": "constructor",
             "length": 21,
             "docLength": null
           },
           {
-            "id": "22427640-5601-2499-f24c-8c8d46e6b86e",
+            "id": "63490ae0-7b3e-2284-7d45-6304627b990a",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Retrieves and caches the list of entries associated with an instance of the `CHM` class, or computes and cache them if they are not already present in the cache.",
+            "description": "Retrieves or caches a list of entries associated with the class instance, upon the first call it generates the list internally and after that it returns the cached value.",
             "params": [],
             "returns": {
-              "type_name": "list",
-              "description": "A cache of entries."
+              "type_name": "list[str]",
+              "description": "A cache of the method `_entries()` calls."
+            },
+            "usage": {
+              "language": "python",
+              "code": "# create an instance of the CHM class and store it in the variable \"chm\"\nchm = CHM('path/to/file.chm')\n\n# use the entries() method to retrieve a list of all files in the CHM file\nfiles = chm.entries()\n\n# print out the number of files found in the CHM file\nprint(len(files))\n",
+              "description": ""
             },
             "name": "entries",
             "location": {
@@ -352,15 +387,20 @@
             "docLength": null
           },
           {
-            "id": "d0f1e1b4-07b5-9cbb-2948-0a12097cea92",
+            "id": "a041534d-17cc-288a-bf45-a0b8d45a6cd4",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Retrieves and stores a list of HTML files associated with an object of class `CHM` in its cache for future use.",
+            "description": "Retrieves and caches a list of HTML files in the directory where the CHM class was executed, if not already cached.",
             "params": [],
             "returns": {
-              "type_name": "list",
-              "description": "A cache of the html files in the system."
+              "type_name": "list[str]",
+              "description": "A cache of the list of files with the extension .html in the current directory and its subdirectories, generated by calling the internal function `_html_files()`."
+            },
+            "usage": {
+              "language": "python",
+              "code": "chm = CHM(\"path/to/chm\")\nhtml_files = chm.html_files()\n# Use the html_files variable\n",
+              "description": ""
             },
             "name": "html_files",
             "location": {
@@ -375,11 +415,11 @@
             "docLength": null
           },
           {
-            "id": "1343904a-1a09-deb0-5740-1bfb19418361",
+            "id": "ffff599b-a3a8-6d86-6d44-cd11acdd044b",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Within the CHM class takes the `PageLister` object as input, feeds it with the `topicstree`, and returns the resulting pages list.",
+            "description": "Generates a list of HTML files in a given directory and its subdirectories by feeding the topic tree with the `PageLister` object.",
             "name": "_html_files",
             "location": {
               "start": 163,
@@ -393,15 +433,20 @@
             "docLength": null
           },
           {
-            "id": "3da088a7-8e00-ffb5-8b41-d6ed6035c0b4",
+            "id": "6c28edc4-9629-e180-a74f-bde7719971ff",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Retrieves and stores image URLs in a class instance's cache for later use.",
+            "description": "Retrieves and caches image URLs based on a private `_image_urls` method call.",
             "params": [],
             "returns": {
-              "type_name": "str",
+              "type_name": "Dict[str,str]",
               "description": "A cache of image URLs."
+            },
+            "usage": {
+              "language": "python",
+              "code": "chm = CHM('path/to/file')\nimage_urls = chm.image_urls()\nfor url in image_urls:\n    # do something with each URL, such as downloading or displaying it\n    print(url)\n# Close the CHM file once you are done with it\nchm.close()\n",
+              "description": ""
             },
             "name": "image_urls",
             "location": {
@@ -416,11 +461,11 @@
             "docLength": null
           },
           {
-            "id": "28aa1451-3add-0193-234c-441eba1d5997",
+            "id": "acc73965-caf9-16b9-3149-03b83d4fb0bb",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Within the CHM class fetches images from HTML files and adds them to a list of image URLs.",
+            "description": "Generates a list of image URLs present in an HTML file by using the `ImageCatcher` class to catch and decode images.",
             "name": "_image_urls",
             "location": {
               "start": 175,
@@ -434,15 +479,20 @@
             "docLength": null
           },
           {
-            "id": "14753d05-519b-43a0-ba4a-74513fe6669d",
+            "id": "5ec038b0-bc83-bf89-ee4e-94c70a2a18e2",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "In the `CHM` class retrieves and caches a list of image files for the current application.",
+            "description": "Retrieves or caches the list of image files associated with the object.",
             "params": [],
             "returns": {
-              "type_name": "list",
-              "description": "A cache of image files."
+              "type_name": "List[str]",
+              "description": "A list of image files contained within the current working directory."
+            },
+            "usage": {
+              "language": "python",
+              "code": "from CHM import CHM\nchm = CHM(\"path/to/file.chm\")\nimage_files = chm.image_files()\nprint(image_files)\n",
+              "description": ""
             },
             "name": "image_files",
             "location": {
@@ -457,11 +507,11 @@
             "docLength": null
           },
           {
-            "id": "38638280-bfa4-0d92-4340-39bb08f9e843",
+            "id": "aaf27116-ac31-4394-c148-78d897135a62",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "In the CHM class takes an input of self.image_urls() and then iterates through each entry in the list. If a match is found between the entry and image_url, it updates the output dictionary with the entry and its corresponding image URL. Finally, it returns the updated output dictionary.",
+            "description": "Updates an internal dictionary `out` with image URLs and their corresponding entry names from `self.image_urls()` and `self.entries()`, respectively, while ignoring already existing entries in `out`.",
             "name": "_image_files",
             "location": {
               "start": 197,
@@ -475,15 +525,20 @@
             "docLength": null
           },
           {
-            "id": "2e6691da-dd0f-b791-4243-4ddc97b98dd7",
+            "id": "c175b3f8-61ec-5788-d245-626362a70f5e",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Retrieves and caches a list of topics associated with an instance of the `CHM` class, if not already cached.",
+            "description": "Retrieves or caches the topics list if it's not already available, returning the cached list.",
             "params": [],
             "returns": {
-              "type_name": "list",
-              "description": "A cache of the topics as obtained from calling the private method `_topics`."
+              "type_name": "list[str]",
+              "description": "A cache of the topics."
+            },
+            "usage": {
+              "language": "python",
+              "code": "# Creating a CHM object\nchm = CHM(\"path/to/document.chm\")\n\n# Using the topic method\ntopics = chm.topics()\nprint(topics) # prints all available topics in the chm file\n",
+              "description": ""
             },
             "name": "topics",
             "location": {
@@ -498,11 +553,11 @@
             "docLength": null
           },
           {
-            "id": "8bf3625c-612f-c2bc-1946-7b5e1cec2d51",
+            "id": "f82c0bc7-7f3e-bda1-c643-0014e5289aac",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Within a `CHM` class takes an `Entry` object as input and returns a new `Entry` object with additional properties based on the original input.",
+            "description": "Recursively traverses through the file's entries and returns an Entry object containing the topics found in the file.",
             "name": "_topics",
             "location": {
               "start": 214,
@@ -516,15 +571,20 @@
             "docLength": null
           },
           {
-            "id": "11ad0be1-8581-d2a5-4843-d49c969a5222",
+            "id": "a49597b7-6a90-88bd-2044-d7db1ab16349",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "In the `CHM` class determines whether a given topic has already been defined in the cache and returns the cached value if it exists, or calls the `_deftopic` method to create a new definition otherwise.",
+            "description": "Sets or retrieves a topic value from a cache based on the key \"deftopic\".",
             "params": [],
             "returns": {
               "type_name": "object",
-              "description": "Stored in a cache for future use."
+              "description": "A result of calling the `_deftopic` internal method."
+            },
+            "usage": {
+              "language": "python",
+              "code": "chm = CHM(\"path/to/file.chm\")\ndeftopic = chm.deftopic()\n# Accessing topic information\nprint(deftopic.title)  # prints the title of the topic\nprint(deftopic.url)  # prints the url for the topic\n",
+              "description": ""
             },
             "name": "deftopic",
             "location": {
@@ -539,11 +599,11 @@
             "docLength": null
           },
           {
-            "id": "b61ac8a7-1ce1-8281-b64e-820886339944",
+            "id": "06369000-db92-069c-0146-435d4baf2754",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "In the CHM class checks if the input HTML file starts with a slash, and if so, removes it and returns the remaining part in lowercase. If not, it simply returns the HTML file in lowercase.",
+            "description": "Modifies the file path of an HTML file by removing any leading slashes and then lowercasing the resulting string.",
             "name": "_deftopic",
             "location": {
               "start": 231,
@@ -557,15 +617,20 @@
             "docLength": null
           },
           {
-            "id": "143864b4-fcc5-e6a8-fc47-9429a31c9c77",
+            "id": "d9d5ad1c-aa7f-97a7-4749-fa692d668991",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Determines if it has been called before, and if not, it calls its internal method `_frontpage` to generate the front page content, then stores it in the cache for future use.",
+            "description": "Checks if the \"frontpage\" key exists in its cache, otherwise it calls the `_frontpage` method and stores the result in the cache.",
             "params": [],
             "returns": {
               "type_name": "object",
-              "description": "Cache entry containing a page to display as front page."
+              "description": "Determined by calling the internal method `_frontpage()` and storing it in a cache."
+            },
+            "usage": {
+              "language": "python",
+              "code": "# create a new instance of CHM class\nchm = CHM(\"path/to/file.chm\")\n\n# use the frontpage method to retrieve the contents of the front page\nfront_page = chm.frontpage()\n\n# print the contents of the front page\nprint(front_page)\n",
+              "description": ""
             },
             "name": "frontpage",
             "location": {
@@ -580,11 +645,11 @@
             "docLength": null
           },
           {
-            "id": "bb2409f2-4cc4-7185-a54c-b6ab08f9a5a8",
+            "id": "7572b4e9-27fc-05b4-034e-c5e02c191e79",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Determines the front page of a web application by checking if a given file is the index file, and if so, creates a new index file with a numbered name.",
+            "description": "Determines the URL of the front page (/) by iterating through a list of files and selecting the first one with the filename \"index.html\". If the front page is found, it renames the file to \"index<index>.html\" and increments the index value. The final frontpage URL is returned.",
             "name": "_frontpage",
             "location": {
               "start": 242,
@@ -598,15 +663,20 @@
             "docLength": null
           },
           {
-            "id": "aa2f5f36-7c89-be83-0a40-338f457c2ae5",
+            "id": "1aef1c4c-5bf9-b9a4-024c-327cccce7ea6",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Retrieves a list of templates belonging to an instance of the `CHM` class from its cache if it's not already stored, then returns the stored list.",
+            "description": "Retrieves and caches a list of templates if not already cached, and returns the cached list.",
             "params": [],
             "returns": {
-              "type_name": "dict",
-              "description": "A cache of templates."
+              "type_name": "list[str]",
+              "description": "A cache of predefined templates for the current user."
+            },
+            "usage": {
+              "language": "python",
+              "code": "# Create a CHM object\nchm = CHM('path/to/the/file.chm')\n\n# Get the list of HTML files in the CHM file\nhtml_files = chm.html_files()\n\n# Print the list of HTML files to the console\nprint(html_files)\n",
+              "description": ""
             },
             "name": "templates",
             "location": {
@@ -621,11 +691,11 @@
             "docLength": null
           },
           {
-            "id": "145b643c-171f-7080-d647-5b92b2e655a6",
+            "id": "60684bf4-00fa-8687-b148-25e2e4556114",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "In the CHM class lists all files in a directory and filters them based on whether they are already included in a list of entries, returning the remaining files.",
+            "description": "Lists all templates in a directory and filters them based on whether they are already included in the project's entries. The filtered list is returned as a list of file paths.",
             "name": "_templates",
             "location": {
               "start": 257,
@@ -639,15 +709,20 @@
             "docLength": null
           },
           {
-            "id": "f918503b-b1e0-f08f-0749-ce7dbfa7020f",
+            "id": "c51b13fe-cccb-00bb-d34b-3b7fae4376c3",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "In the `CHM` class returns a cached value or computes it from the `_toclevels` method if it's not already in the cache.",
+            "description": "Retrieves or calculates and stores the toclevels attribute value in the object's cache, which is then returned upon subsequent calls.",
             "params": [],
             "returns": {
-              "type_name": "dict",
-              "description": "A cache of toclevels for the given instance of the class."
+              "type_name": "list[str]",
+              "description": "A cached result of calling the `_toclevels()` method."
+            },
+            "usage": {
+              "language": "python",
+              "code": "from CHM import CHM\n\n# Opening a CHM file\nchm = CHM(\"path/to/file.chm\")\n\n# Getting all HTML files in the CHM file\nhtml_files = chm.html_files()\n\n# Closing the CHM file\nchm.close()\n",
+              "description": "\nThis code snippet opens a CHM file at \"path/to/file.chm\", gets all HTML files using the function toclevels, and then closes the CHM file."
             },
             "name": "toclevels",
             "location": {
@@ -662,11 +737,11 @@
             "docLength": null
           },
           {
-            "id": "807c6f71-22df-b39b-0d47-f3343c029e00",
+            "id": "f01b7859-9488-689e-624c-0efc2472317f",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Counts the number of topics at each level in a given hierarchy and returns the maximum level reached or the total number of topics if it exceeds the maximum allowed level.",
+            "description": "Determines the maximum level of toc recursively by feeding the topic tree with the decode \"latin-1\" and counting the number of topics exceeding the specified limit.",
             "name": "_toclevels",
             "location": {
               "start": 271,
@@ -680,21 +755,26 @@
             "docLength": null
           },
           {
-            "id": "357d4f31-d374-a09e-4a43-7bbf2761aac8",
+            "id": "8185ea69-0d21-1d85-5b4d-4242749cef5a",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "In the `CHM` class retrieves an HTML template based on the input `name` and replaces placeholders with class variables values, returning the substituted template as a string.",
+            "description": "Retrieves an HTML template based on the input `name`, opening and reading the relevant template file and passing parameters to a Template instance for substitution.",
             "params": [
               {
                 "name": "name",
                 "type_name": "str",
-                "description": "Used to specify the name of the template to be loaded from the templates directory."
+                "description": "Used to specify the template to be rendered."
               }
             ],
             "returns": {
-              "type_name": "stringTemplate",
-              "description": "A instance of class `string.Template` that has been filled with placeholders substituted with values from a dictionary."
+              "type_name": "str",
+              "description": "A modified version of an HTML template file based on the input parameter `name`."
+            },
+            "usage": {
+              "language": "python",
+              "code": "# Import CHM class from chm module\nfrom chm import CHM\n\n# Create a new CHM object with the path to a CHM file as an argument\nchm = CHM(\"path/to/example.chm\")\n\n# Call get_template method on the CHM object and pass in the name of a template (e.g., \"index.html\")\ntpl = chm.get_template(\"index.html\")\n\n# Print out the generated HTML code\nprint(tpl)\n",
+              "description": ""
             },
             "name": "get_template",
             "location": {
@@ -712,19 +792,24 @@
             "docLength": 1
           },
           {
-            "id": "71a93fbe-1cc9-24b6-8f48-0bf5c9cac9c2",
+            "id": "c35484f6-215a-10a5-464e-cdde70747cb8",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Writes HTML files and icons to a specified directory based on templates and frontpage.",
+            "description": "Writes HTML templates to a specified destination directory and copies icons to a subdirectory within the destined directory.",
             "params": [
               {
                 "name": "destdir",
-                "type_name": "str",
-                "description": "Used to specify the directory where the templates are written. It has an initial value of \".\", which means the current working directory."
+                "type_name": "str | Path",
+                "description": "Used to specify the directory where the generated HTML files will be written."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "# Create a CHM object with the name of a CHM file or directory as its source\nchm = CHM(\"path/to/chmfile.chm\")\n\n# Call the process_templates method and pass in a destination directory path as an argument\nchm.process_templates(\"path/to/destdir/\")\n",
+              "description": ""
+            },
             "name": "process_templates",
             "location": {
               "start": 297,
@@ -741,34 +826,39 @@
             "docLength": 1
           },
           {
-            "id": "5e9f114f-c925-2fbf-ad41-fa3b62c471d8",
+            "id": "374cb3c6-f84d-0e82-394c-b09390cc0c6e",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Takes an entry object, an output file path, and a flag for correctness or not, and creates or overwrites the corresponding entry file in the specified directory with the correct or incorrect content respectively.",
+            "description": "Extracts an entry from a source file and saves it to a specified output file, creating directories as needed.",
             "params": [
               {
                 "name": "entry",
-                "type_name": "Entry",
-                "description": "Passed as an argument to the function. It represents an entry in a file or directory that needs to be extracted."
+                "type_name": "Entry | str",
+                "description": "Used to specify the entry to be extracted from the source code."
               },
               {
                 "name": "output_file",
-                "type_name": "str",
-                "description": "Used to specify the output file for writing extracted entries."
+                "type_name": "str | Path",
+                "description": "Used to specify the output file path for the extracted entry."
               },
               {
                 "name": "destdir",
-                "type_name": "str",
-                "description": "Used to specify the directory where the output file will be saved. It can be either an absolute path or a relative path from the current working directory."
+                "type_name": "str | List[str]",
+                "description": "Used to specify the directory where the extracted entry will be saved. It can either be a single directory path or a list of directories, separated by \",\"."
               },
               {
                 "name": "correct",
                 "type_name": "bool",
-                "description": "Used to indicate whether the entry should be corrected or not during extraction."
+                "description": "Used to indicate whether the output file should be created with correct or incorrect framing."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "chm = CHM(\"path/to/file.chm\")\nchm.extract_entry(entry=\"name of entry\", output_file=\"output.html\", destdir=\".\", correct=False)\n",
+              "description": ""
+            },
             "name": "extract_entry",
             "location": {
               "start": 312,
@@ -782,29 +872,34 @@
             "docLength": null
           },
           {
-            "id": "cb8c4372-4101-399a-9a44-068856664b0f",
+            "id": "e9e44f2a-fa1d-1c84-6940-901645e0fd6b",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "In the `CHM` class takes an optional list of entries, searches for malicious names, and extracts entries matching a regular expression pattern or a parent directory.",
+            "description": "Extracts entries from a list and performs actions based on the entry's format and contents, including checking for malicious names and raising errors if necessary.",
             "params": [
               {
                 "name": "entries",
-                "type_name": "listarray",
-                "description": "An array of strings representing files or paths to files that need to be extracted."
+                "type_name": "List[str]",
+                "description": "Used to store the entries to be extracted from the input file."
               },
               {
                 "name": "destdir",
                 "type_name": "str",
-                "description": "Used to specify the directory where the extracted entries will be saved. It has a default value of \".\"."
+                "description": "Used to specify the destination directory for extracted entries."
               },
               {
                 "name": "correct",
                 "type_name": "bool",
-                "description": "Used to indicate whether the entry should be extracted with its original path or as a relative path within the destination directory."
+                "description": "Used to indicate whether the entry should be extracted or not."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "import re\n\n# Initialize the CHM class object with the name of a valid file path.\nchm = CHM(\"path/to/file.chm\")\n\n# Extract all entries from the .chm file using the extract_entries method.\nentries = chm.extract_entries()\n\n# Iterate over each entry and print its filename.\nfor e in entries:\n    if re.match(chm.aux_re, e):\n        continue\n    print(e)\n",
+              "description": "\nNote that this example assumes that the CHM class object has already been initialized with a valid file path. Also, the code snippet only prints the names of the files that match the regular expression defined in the aux_re attribute of the CHM class."
+            },
             "name": "extract_entries",
             "location": {
               "start": 342,
@@ -821,19 +916,24 @@
             "docLength": 1
           },
           {
-            "id": "94978732-6588-4b96-b04c-f1f2235611b9",
+            "id": "8a348c54-1b97-498e-d04f-8acaf018c522",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Performs an action on a destination directory, creating it if it does not exist and executing actions related to its entries and templates.",
+            "description": "Performs the following tasks:\n\n* Creates the destination directory if it does not exist.\n* Extracts entries from the CHM file to the destination directory.\n* Processes templates in the destination directory.",
             "params": [
               {
                 "name": "destdir",
                 "type_name": "str",
-                "description": "Used to specify the destination directory for the extraction of the entries from the jar file."
+                "description": "Used to specify the directory where the extracted files will be saved."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "chm_file = \"path/to/your/file.chm\"\ndestdir = \"path/to/destination/directory\"\nCHM(chm_file).extract(destdir)\n",
+              "description": "\nIn this example, the user calls the extract() method on an instance of the CHM class, passing in the path to the .chm file and the desired destination directory as arguments. The method creates a new directory at the specified destination location if it does not already exist and then extracts all files from the .chm archive into that directory using the _entries() method and the process_templates() method."
+            },
             "name": "extract",
             "location": {
               "start": 354,
@@ -850,19 +950,24 @@
             "docLength": 1
           },
           {
-            "id": "596fa9de-739d-aab4-914a-d134726c10f7",
+            "id": "efdf64ab-9f0c-15a3-5e4c-636ae316bcbe",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Within the `CHM` class iterates over a list of HTML files and prints the contents of each file to the output stream if it does not match a specific regular expression pattern.",
+            "description": "Iterates through a list of HTML files and prints out the content of each file, filtered by a regular expression pattern to exclude certain files.",
             "params": [
               {
                 "name": "output",
-                "type_name": "object",
-                "description": "Used to represent the destination for printing the output of the function."
+                "type_name": "FileIO | str",
+                "description": "Used to write the output of the function to a file or the console."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "import os\nfrom CHM import CHM\n\n# Create a CHM instance with the path to the chm file as the argument.\nchm = CHM(\"path/to/file.chm\")\n\n# Call the dump_html function and pass in an open file object (e.g., sys.stdout) as an argument.\nchm.dump_html(sys.stdout)\n",
+              "description": ""
+            },
             "name": "dump_html",
             "location": {
               "start": 367,
@@ -879,19 +984,24 @@
             "docLength": 1
           },
           {
-            "id": "32387af6-630b-7c84-1443-dcc7ee5eead7",
+            "id": "5aad2b12-573b-8891-4a4e-51625d28dcb1",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Processes CHM files by calling the `chmtotext` command with input from an Entry object, and outputting the result to the specified destination.",
+            "description": "Processes HTML files and converts them into plain text format using the `chmtotext` command.",
             "params": [
               {
                 "name": "output",
-                "type_name": "object",
+                "type_name": "Optional[io.Text]",
                 "description": "Used to specify the destination for the generated text."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "chm = CHM(\"path_to_chm_file\")\nchm.chm2text(output=sys.stdout)\n",
+              "description": "\nIn this example, the user creates a CHM object using the file path of the chm file and then calls the chm2text method on the CHM object, passing in output as sys.stdout to print the contents of the chm file to the console."
+            },
             "name": "chm2text",
             "location": {
               "start": 380,
@@ -908,24 +1018,29 @@
             "docLength": 1
           },
           {
-            "id": "659d93f8-a739-5e9d-a241-d04d8f50e470",
+            "id": "6aa91c1b-3fd3-9991-1441-d2aa380859f2",
             "ancestors": [
-              "5eab4266-49a5-e1a4-434d-9cca34158fd1"
+              "eb67e853-94da-208d-f142-0d86f2408add"
             ],
-            "description": "Extracts CHM content into a temporary directory, processes images, and generates HTML or PDF output using the specified format and options.",
+            "description": "Extracts CHM content, creates a temporary directory, and converts it to HTML or PDF format using the specified options and executes the resulting HTML document.",
             "params": [
               {
                 "name": "output",
-                "type_name": "str",
-                "description": "Used to specify the output file path for the generated HTML document, which can be a directory or a file name."
+                "type_name": "Union[str, Path]",
+                "description": "Used to specify the output file path for the generated HTML document."
               },
               {
                 "name": "format",
-                "type_name": "str",
-                "description": "Used to specify the output format of the documentation, which can be either CHM2HTML or CHM2PDF."
+                "type_name": "Action.CHM2HTML | Action.CHM2PDF",
+                "description": "Used to specify the output format of the document, either CHM2HTML or CHM2PDF."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "from chmlib import CHM\n\n# Open a CHM file\nchm_file = CHM(\"example.chm\")\n\n# Extract all HTML files from the CHM into a temporary directory\noutput_dir = chm_file.htmldoc(format=CHM.Action.CHM2HTML)\n\n# Print the path of the output directory\nprint(output_dir)\n",
+              "description": ""
+            },
             "name": "htmldoc",
             "location": {
               "start": 395,
@@ -942,14 +1057,14 @@
             "docLength": 1
           },
           {
-            "id": "cd2d72ba-c448-e8a3-8947-b5eff0231e00",
+            "id": "f417b8f4-8418-ab95-9345-ede9f7720153",
             "ancestors": [],
-            "description": "Manages entry content, including reading and manipulating links, adding restore framing JavaScript, and returning the corrected entry content.",
+            "description": "Manages entry content, including reading and manipulating links, adding framing JavaScript, and correcting certain issues with HTML entities and filenames.",
             "attributes": [
               {
                 "name": "source",
                 "type_name": "object",
-                "description": "Used to store a string containing the entry's content."
+                "description": "Used to store the entry's source content."
               },
               {
                 "name": "name",
@@ -959,17 +1074,17 @@
               {
                 "name": "filename_case",
                 "type_name": "str",
-                "description": "Used to modify the file name in lower case when searching for links."
+                "description": "Used to specify whether the entry filename should be lowercased when searching for links within its content."
               },
               {
                 "name": "restore_framing",
                 "type_name": "bool",
-                "description": "Used to specify whether the framing links should be restored or not."
+                "description": "Used to enable or disable restoring framing for links within the entry content."
               },
               {
                 "name": "frontpage",
-                "type_name": "ospathbasename",
-                "description": "Used to specify the name of the file containing the front page content for the entry."
+                "type_name": "str",
+                "description": "Used to specify the name of the front page file for framing links."
               }
             ],
             "name": "Entry",
@@ -988,39 +1103,44 @@
             "docLength": 1
           },
           {
-            "id": "72d9fbac-8b4e-4089-0f45-97209679124f",
+            "id": "f6b24fec-45f0-9e98-384e-af91b0c149a8",
             "ancestors": [
-              "cd2d72ba-c448-e8a3-8947-b5eff0231e00"
+              "f417b8f4-8418-ab95-9345-ede9f7720153"
             ],
-            "description": "Of the `Entry` class initializes attributes with user-provided values: source, name, filename_case, restore_framing, and frontpage.",
+            "description": "Initializes instance variables source, name, filename_case, restore_framing, and frontpage.",
             "params": [
               {
                 "name": "source",
-                "type_name": "object",
-                "description": "Used to store the source code for a web page or document."
+                "type_name": "str",
+                "description": "Assigned to the attribute of the same name, storing the initial value of the object."
               },
               {
                 "name": "name",
                 "type_name": "str",
-                "description": "Assigned the value passed as argument during initialization, representing the name of the page or resource being initialized."
+                "description": "Used to assign a name to the framing element."
               },
               {
                 "name": "filename_case",
                 "type_name": "str",
-                "description": "Used to specify the case of the file name, which can be \"lower\", \"upper\", or \"title\"."
+                "description": "Used to set the case of the filename when restoring framing."
               },
               {
                 "name": "restore_framing",
-                "type_name": "int",
-                "description": "1 by default, indicating that the frame should be restored when loading the HTML file."
+                "type_name": "bool",
+                "description": "Used to restore the original framing of the HTML document when it was parsed, providing more accurate results for some parsers."
               },
               {
                 "name": "frontpage",
-                "type_name": "ospathbasename",
-                "description": "Set to the value of \"index.html\" by default, indicating that the initial front page of the web application should be the file named \"index.html\"."
+                "type_name": "str | str",
+                "description": "Used to specify the name of the HTML file that serves as the front page of the website, with the default value being \"index.html\"."
               }
             ],
             "returns": null,
+            "usage": {
+              "language": "python",
+              "code": "import re\nfrom os import path\n\nsource = 'https://www.example.com'\nname = 'index.html'\nfilename_case = 'lower'\nrestore_framing = True\nfrontpage = \"index.html\"\n\nentry = Entry(source, name, filename_case, restore_framing, frontpage)\n",
+              "description": "\nIn this example, we first import the necessary libraries for using the function __init__. We then define the parameters of the function by initializing a string variable called source with the URL to the website you want to crawl, and a string variable called name with the file path and name of the HTML file.\nWe next initialize three other variables that are not listed in the code sample, which correspond to filename_case, restore_framing, and frontpage, but do not appear in the provided sample. \nThen we create an instance of the Entry class using those parameters and assign it to a variable called entry."
+            },
             "name": "__init__",
             "location": {
               "start": 441,
@@ -1029,26 +1149,31 @@
               "indent": 8,
               "comment": null
             },
-            "item_type": "method",
+            "item_type": "constructor",
             "length": 13,
             "docLength": null
           },
           {
-            "id": "71cfc687-34dd-cabb-ba44-0decee42c1ef",
+            "id": "a423d561-aea0-74bd-9d4c-9addd4bab367",
             "ancestors": [
-              "cd2d72ba-c448-e8a3-8947-b5eff0231e00"
+              "f417b8f4-8418-ab95-9345-ede9f7720153"
             ],
-            "description": "Replaces certain words in a given string with their lowercase versions, specifically the keywords `href` and `src`.",
+            "description": "Replaces all occurrences of href or src attributes in a given string with their lowercase versions, preserving the rest of the string unchanged.",
             "params": [
               {
                 "name": "text",
                 "type_name": "str",
-                "description": "A string of text to be processed for lowercase links."
+                "description": "The string to be processed with regular expression substitution for lowercasing hyperlink attributes."
               }
             ],
             "returns": {
               "type_name": "str",
-              "description": "The result of applying a regular expression to the input string using a lambda function."
+              "description": "The result of replacing all occurrence of href or src with their corresponding lowercase version inside a given string using a lambda function."
+            },
+            "usage": {
+              "language": "python",
+              "code": "entry = Entry(source, name, filename_case, restore_framing, frontpage)\ntext = entry.read()\nlowered_text = entry.lower_links(text)\nprint(lowered_text)\n",
+              "description": ""
             },
             "name": "lower_links",
             "location": {
@@ -1066,26 +1191,31 @@
             "docLength": 1
           },
           {
-            "id": "fc45d938-974d-9ca6-824b-dbbd7c3b27b6",
+            "id": "a875aca8-b140-fa96-1f48-821a35ddb5d8",
             "ancestors": [
-              "cd2d72ba-c448-e8a3-8947-b5eff0231e00"
+              "f417b8f4-8418-ab95-9345-ede9f7720153"
             ],
-            "description": "Modifies JavaScript code based on the `name` parameter, replacing certain characters and generating a new script tag with depth-dependent modifications.",
+            "description": "Modifies the provided string `text` by adding JavaScript code that displays a link to the framing page for the current entry when the page is loaded.",
             "params": [
               {
                 "name": "name",
                 "type_name": "str",
-                "description": "Used to generate a script tag for restoring framing pages."
+                "description": "Rewritten to exclude any forward slashes and then passed through a depth counter to generate the script for framing restoration."
               },
               {
                 "name": "text",
-                "type_name": "HTML",
-                "description": "Modified by replacing any occurrence of `<body>` with the encoded JavaScript code."
+                "type_name": "str",
+                "description": "Passed as an argument to re.sub method."
               }
             ],
             "returns": {
               "type_name": "str",
-              "description": "A modified version of the input string `text`, with certain elements replaced or removed using regular expressions and string concatenation."
+              "description": "A modified version of the original text, where certain parts have been replaced with JavaScript code for framing functionality."
+            },
+            "usage": {
+              "language": "python",
+              "code": "entry = Entry(\"example.com\", \"index.html\")\ntext = entry.read()\nnew_text = entry.lower_links(text)\nfinal_text = entry.add_restoreframing_js(\"subfolder/page2.html\", new_text)\n",
+              "description": ""
             },
             "name": "add_restoreframing_js",
             "location": {
@@ -1100,15 +1230,20 @@
             "docLength": null
           },
           {
-            "id": "eb967df1-bcb9-c5b6-8b4d-000362c26ecb",
+            "id": "39e61f55-c973-e1b7-0540-3371225628a5",
             "ancestors": [
-              "cd2d72ba-c448-e8a3-8947-b5eff0231e00"
+              "f417b8f4-8418-ab95-9345-ede9f7720153"
             ],
-            "description": "Reads data from an entry, modifies it by removing certain tags and strings, and returns the modified data.",
+            "description": "Modifies an input string based on its name and filename case, replacing certain HTML tags and links related to Team Lib.",
             "params": [],
             "returns": {
               "type_name": "str",
-              "description": "A modified version of the input data, with certain elements removed or replaced."
+              "description": "The modified string after applying the given regular expressions to remove unwanted elements."
+            },
+            "usage": {
+              "language": "python",
+              "code": "entry = Entry(source=\"http://example.com\", name=\"/path/to/page.html\")\ncorrected_data = entry.correct()\n# Do something with corrected data, e.g. display it in a web browser\n",
+              "description": ""
             },
             "name": "correct",
             "location": {
@@ -1126,15 +1261,20 @@
             "docLength": 1
           },
           {
-            "id": "ee96fd9c-68bf-a6b0-af49-62e3241bef8c",
+            "id": "271bde13-87ff-4fa3-ed41-04ad07aa5c16",
             "ancestors": [
-              "cd2d72ba-c448-e8a3-8947-b5eff0231e00"
+              "f417b8f4-8418-ab95-9345-ede9f7720153"
             ],
-            "description": "Retrieves entry content by reading its file and performing modifications based on the object's properties, such as lowercasing links and restoring framing HTML tags if necessary. It returns the modified content or an empty string if none exists.",
+            "description": "Reads the entry content, modifies it based on various options, and returns the modified content or None if no modification is needed.",
             "params": [],
             "returns": {
               "type_name": "str",
-              "description": "A string containing the entry content."
+              "description": "Either the contents of the entry or a modified version of it depending on various conditions and configuration options."
+            },
+            "usage": {
+              "language": "python",
+              "code": "# Create an instance of the Entry class with the necessary parameters \nentry = Entry(source, name, filename_case, restore_framing, frontpage) \n\n# Call the read() method to retrieve the content of the entry\ndata = entry.read() \n\n# Check if the data is not None and then perform any additional processing \nif data is not None: \n    # Lower case links in the data \n    data = entry.lower_links(data) \n\n    # Add restore framing JavaScript to the data \n    data = entry.add_restoreframing_js(self.name[1:], data) \n\n# Return the processed data or None if it was not found \nreturn data \n",
+              "description": "\nIn this example, we create an instance of the Entry class with the necessary parameters, and then call the read() method to retrieve the content of the entry. We then check if the data is not None and perform any additional processing required (in this case, lower casing links in the data and adding restore framing JavaScript). Finally, we return the processed data or None if it was not found."
             },
             "name": "get",
             "location": {
@@ -1160,22 +1300,27 @@
     "path": "archmage/__init__.py",
     "content": {
       "structured": {
-        "description": "A function `file2dir` that takes a file name as input and generates a directory name based on the file's name and an added suffix \"_html\". The directory name is created by splitting the file name into its component parts, appending the desired suffix to the first part, and then returning the resulting directory name. The code also includes imports from the `os` and `pkg_resources` packages, which provide functionality for working with system files and resources, respectively.",
+        "description": "Two variables: `user_config` and `config`. The `user_config` variable stores the path to a configuration file located in the user's home directory, while the `config` variable references a system-wide configuration file. The code also defines a function called `file2dir`, which takes a filename as input and returns the corresponding directory name, including the file extension for an HTML version of the file.",
         "items": [
           {
-            "id": "12de3f94-479f-9c95-d049-29d906f20915",
+            "id": "aaf53e27-f16b-70a3-5e41-ffaf3875880e",
             "ancestors": [],
-            "description": "Takes a filename as input and returns the corresponding directory name by concatenating the file name with an underscore and the string \"html\".",
+            "description": "Splits the input file name into directory and filename components, concatenates the directory component with underscores and the string \"html\", and returns the resulting directory path.",
             "params": [
               {
                 "name": "filename",
                 "type_name": "str",
-                "description": "The name of a file to convert into a directory path."
+                "description": "A path to a file that needs to be converted into a directory."
               }
             ],
             "returns": {
               "type_name": "str",
-              "description": "The concatenation of the directory name and `_html`."
+              "description": "The directory name of a file based on its basename and an additional prefix of \"_html\"."
+            },
+            "usage": {
+              "language": "python",
+              "code": "file = 'some_filename.txt'\ndirname = file2dir(file)\nprint(dirname)\n# Output: some_filename_html\n",
+              "description": ""
             },
             "name": "file2dir",
             "location": {

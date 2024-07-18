@@ -51,19 +51,21 @@ from archmage.htmldoc import htmldoc
 
 class Action(Enum):
     """
-    Defines five enums representing different actions for handling CHM files:
-    `EXTRACT`, `DUMPHTML`, `CHM2TXT`, `CHM2HTML`, and `CHM2PDF`.
+    Defines five constants representing different actions for working with HTML
+    files, including extracting content, dumping HTML, converting from CHM to TXT
+    or HTML, and converting from CHM to PDF.
 
     Attributes:
-        EXTRACT (Enum): 1.
-        DUMPHTML (int): 2 in value, indicating that it performs the action of
-            dumping HTML content to a file or directory.
-        CHM2TXT (3digit): 3-dimensional, meaning it can be any combination of three
-            values: 1, 2, or 3.
+        EXTRACT (int): 1, indicating that the action extracts information from a
+            source file.
+        DUMPHTML (int): 2 in value, indicating that it extracts HTML content from
+            a CHM file.
+        CHM2TXT (str): 3 in value, indicating that it converts CHM files to plain
+            text format.
         CHM2HTML (int): 4th in the enumeration, representing the action of converting
-            CHM files to HTML format.
-        CHM2PDF (Integer): 5, indicating that it is a method for converting Chemical
-            Markup Language (ChemML) files to Portable Document Format (PDF) files.
+            Chemistry Markup Language (ChemML) files to HTML format.
+        CHM2PDF (int): 5, which represents the action of converting CHM files to
+            PDF format.
 
     """
     EXTRACT = 1
@@ -78,11 +80,11 @@ PARENT_RE = re.compile(r"(^|/|\\)\.\.(/|\\|$)")
 
 class FileSource:
     """
-    Provides methods for listing and retrieving files from a CHM (Help File) file,
-    as well as a `close()` method to release resources when no longer needed.
+    Provides methods to list and retrieve files from a CHM file.
 
     Attributes:
-        _chm (chmlibChmFile): Used to manage a CHM file.
+        _chm (chmlibchm_t): A handle to a CHM file, which allows for reading and
+            manipulation of its contents.
 
     """
     def __init__(self, filename):
@@ -90,29 +92,31 @@ class FileSource:
 
     def listdir(self):
         """
-        Within the `FileSource` class enumerates files and directories within a
-        Chemical Document Management (CDM) file using the `chm_enumerate` function
-        from the CHMLIB library. It appends the path of each file or directory to
-        a list (`out`) and returns the list.
+        Iterates over all files in a ChM (Chemical Markup) file and appends their
+        paths to a list.
 
         Returns:
-            Liststr: An enumerated list of file paths from a given Chemistry Machine
-            (CHM) file.
+            List[str]: A list of strings containing the file paths in the specified
+            directory.
 
         """
         def get_name(chmfile, ui, out):
             """
-            Takes a `chmfile`, `ui`, and `out` parameters, and appends the path
-            to a list if it is not the root directory `/`.
+            Retrieves the path to a Chemical Name file based on user input and
+            appends it to a list before returning the CHM enumerator's continuation
+            value.
 
             Args:
-                chmfile (object): Used to represent a file path.
-                ui (chmfilePath): Used to store the path of the UI file.
-                out (stdvectorstdstring): Used to store the paths of the files
-                    found in the given directory.
+                chmfile (File): Passed as an argument to the function, indicating
+                    the file from which the name will be extracted.
+                ui (chmlib.UI): Used to store a path that is passed from the user
+                    interface.
+                out (List[str]): Used to store the path of files that are returned
+                    from the function.
 
             Returns:
-                chmlibCHM_ENUMERATOR_CONTINUE: A
+                chmlibCHM_ENUMERATOR_CONTINUE|str: A continue flag indicating
+                whether to continue processing the next item in the CHM file or not.
 
             """
             path = ui.path.decode("utf-8")
@@ -133,14 +137,15 @@ class FileSource:
     def get(self, name):
         """
         Resolves an object in the CHM file using the `chmlib.chm_resolve_object()`
-        method, retrieves the contents of the resolved object using the
-        `chmlib.chm_retrieve_object()` method, and returns the retrieved content.
+        function, retrieves the contents of the resolved object using the
+        `chmlib.chm_retrieve_object()` function, and returns the contents as a string.
 
         Args:
-            name (str): Used to resolve an object in the CHM library.
+            name (str): Used to retrieve an object from the CHM file.
 
         Returns:
-            object: A resolved and retrieved object from the CHM library.
+            bytes: A slice of memory containing the contents of an object in the
+            CHM file.
 
         """
         result, ui = chmlib.chm_resolve_object(self._chm, name.encode("utf-8"))
@@ -157,25 +162,25 @@ class FileSource:
 
 class DirSource:
     """
-    Provides methods for listing directory contents and reading file contents,
-    along with a `close()` method for cleaning up resources.
+    Provides a directory-based file system interface, offering methods for listing
+    files and reading their contents.
 
     Attributes:
-        dirname (str): Initialized in the constructor with the value passed as
-            argument to the constructor. It represents
-            the root directory of the source files to be listed or read from.
+        dirname (str): Initialized to the directory path provided during initialization,
+            representing the root directory for which file listings are retrieved
+            and files are read.
 
     """
     def __init__(self, dirname):
         self.dirname = dirname
     def listdir(self):
         """
-        Recursively traverses subdirectories of a specified directory and returns
-        a list of relative file paths within those subdirectories.
+        Iterates through all subdirectories and files within a specified directory,
+        and returns a list of relative paths to each file.
 
         Returns:
-            list: A collection of strings representing the file paths relative to
-            the directory path provided as an argument.
+            List[str]: A list of file paths relative to the directory specified
+            in the class instance attribute `dirname`.
 
         """
         entries = []
@@ -187,15 +192,15 @@ class DirSource:
         return entries
     def get(self, filename):
         """
-        Within the `DirSource` class reads a file from a specified directory and
-        returns its contents as a binary read stream.
+        Retrieves a file from the directory and reads it into memory as a bytes
+        object, returning the contents of the file if successful, or `None` otherwise.
 
         Args:
-            filename (str): Used to specify the file name to read from.
+            filename (str): Used to specify the file name to be read from the directory.
 
         Returns:
-            object: The result of reading a file from a specified directory and
-            file name.
+            bytes: The contents of a file located in the directory specified by
+            `self.dirname and filename`.
 
         """
         with open(self.dirname + filename, "rb") as fh:
@@ -208,48 +213,44 @@ class DirSource:
 
 class CHM:
     """
-    Manages the extraction and processing of CHM files, including creating a
-    temporary directory for storing extracted content, and executing various
-    commands to create HTML or PDF outputs. It also provides methods for extracting
-    individual entries from the CHM file and manipulating images within the file.
+    Represents a CHM (HyperText Markup Language) file, providing methods to extract
+    entries, templates, and images from the file and save them in a specified
+    directory. It also offers the ability to process templates, extract entries,
+    and create an HTML document from the extracted content.
 
     Attributes:
-        cache (instance): Used to keep track of the files that have been extracted
-            from a CHM file. It stores a set of tuples, each containing the file
-            name and its corresponding path.
-        source (instance): Used to represent the source file or directory from
-            which the CHM content will be extracted.
-        sourcename (str): Used to store the source name or path from where the CHM
-            files are extracted.
-        __dict__ (instance): A dictionary containing all the attributes and methods
-            of the class, which can be accessed by their name.
-        aux_re (regular): Used to match names that are not valid CHM entries but
-            may still be interesting or problematic, such as parent directories
-            or malicious filenames.
-        auxes (list): Used to store regular expressions for matching entries that
-            should be skipped
-            during extraction. The regular expressions are used to identify malicious
-            or
-            undesirable entries in the CHM file.
-        topicstree (instance): A list of tuples, where each tuple contains a topic
-            name and a list of subtopics related to that topic. It is used to store
-            the hierarchical structure of the CHM document's topics.
-        topics (instance): A list of tuples, where each tuple contains a topic
-            name and a list of file paths that belong to that topic. It is used
-            to keep track of the files related to each topic in the CHM document.
-        contents (str): Used to store a list of file paths that are extracted from
-            the CHM file using the `extract_entries()` method.
+        cache (Dict[str,Any]): Used to store intermediate results of the CHM file
+            generator, such as the list of HTML files, the list of image URLs, and
+            other metadata.
+        source (Union[DirSource,FileSource]): Used to represent the source of the
+            CHM file, which can be either a directory or a file.
+        sourcename (str|str): Used to store the source name of a CHM file.
+        __dict__ (Dict[str,Any]): Used to store the instance variables of the
+            class. It contains the values of the attributes and methods of the
+            class, which can be accessed using their attribute names.
+        aux_re (RegexMatcher|str): Used to filter out non-HTML entries from the
+            CHM file's contents.
+        auxes (Union[str,List[str]]): Used to store a list of strings that represent
+            regular expressions for auxilary file names in the CHM file.
+        topicstree (Union[DirSource,FileSource]): Used to store the source of the
+            topic tree.
+        topics (List[str]): Used to store a list of topics for which the CHM file
+            contains content.
+        contents (Dict[str,str]): A container for the contents of the CHM file,
+            which can include HTML files, image files, and other data.
 
     """
     def __init__(self, name):
         """
-        Initializes an instance of `CHM` by setting member variables, compiling
-        code from a configuration file, and creating a `SitemapFile` object to
-        store the topic tree.
+        Initializes instance variables and performs various actions, including:
+        * Setting cache and source directories
+        * Reading and executing configuration file contents
+        * Creating an auxillary regular expression for topic searching
+        * Parsing a topics tree and setting `topicstree` attribute.
 
         Args:
-            name (str): Used to set the name of the configuration file or directory
-                being initialized.
+            name (Union[str, Path]): Used to specify the source file or directory
+                for which the Sitemap class will generate content.
 
         """
         self.cache = {}
@@ -282,12 +283,12 @@ class CHM:
 
     def entries(self):
         """
-        Retrieves and caches the list of entries associated with an instance of
-        the `CHM` class, or computes and cache them if they are not already present
-        in the cache.
+        Retrieves or caches a list of entries associated with the class instance,
+        upon the first call it generates the list internally and after that it
+        returns the cached value.
 
         Returns:
-            list: A cache of entries.
+            list[str]: A cache of the method `_entries()` calls.
 
         """
         if "entries" not in self.cache:
@@ -302,11 +303,13 @@ class CHM:
     # (actually performed by the PageLister class)
     def html_files(self):
         """
-        Retrieves and stores a list of HTML files associated with an object of
-        class `CHM` in its cache for future use.
+        Retrieves and caches a list of HTML files in the directory where the CHM
+        class was executed, if not already cached.
 
         Returns:
-            list: A cache of the html files in the system.
+            list[str]: A cache of the list of files with the extension .html in
+            the current directory and its subdirectories, generated by calling the
+            internal function `_html_files()`.
 
         """
         if "html_files" not in self.cache:
@@ -315,8 +318,8 @@ class CHM:
 
     def _html_files(self):
         """
-        Within the CHM class takes the `PageLister` object as input, feeds it with
-        the `topicstree`, and returns the resulting pages list.
+        Generates a list of HTML files in a given directory and its subdirectories
+        by feeding the topic tree with the `PageLister` object.
 
         """
         lister = PageLister()
@@ -327,10 +330,10 @@ class CHM:
     # (actually performed by the ImageCatcher class)
     def image_urls(self):
         """
-        Retrieves and stores image URLs in a class instance's cache for later use.
+        Retrieves and caches image URLs based on a private `_image_urls` method call.
 
         Returns:
-            str: A cache of image URLs.
+            Dict[str,str]: A cache of image URLs.
 
         """
         if "image_urls" not in self.cache:
@@ -339,8 +342,8 @@ class CHM:
 
     def _image_urls(self):
         """
-        Within the CHM class fetches images from HTML files and adds them to a
-        list of image URLs.
+        Generates a list of image URLs present in an HTML file by using the
+        `ImageCatcher` class to catch and decode images.
 
         """
         out: List[str] = []
@@ -361,11 +364,11 @@ class CHM:
     # the CHM file
     def image_files(self):
         """
-        In the `CHM` class retrieves and caches a list of image files for the
-        current application.
+        Retrieves or caches the list of image files associated with the object.
 
         Returns:
-            list: A cache of image files.
+            List[str]: A list of image files contained within the current working
+            directory.
 
         """
         if "image_files" not in self.cache:
@@ -374,10 +377,9 @@ class CHM:
 
     def _image_files(self):
         """
-        In the CHM class takes an input of self.image_urls() and then iterates
-        through each entry in the list. If a match is found between the entry and
-        image_url, it updates the output dictionary with the entry and its
-        corresponding image URL. Finally, it returns the updated output dictionary.
+        Updates an internal dictionary `out` with image URLs and their corresponding
+        entry names from `self.image_urls()` and `self.entries()`, respectively,
+        while ignoring already existing entries in `out`.
 
         """
         out = {}
@@ -393,12 +395,11 @@ class CHM:
     # Get topics file
     def topics(self):
         """
-        Retrieves and caches a list of topics associated with an instance of the
-        `CHM` class, if not already cached.
+        Retrieves or caches the topics list if it's not already available, returning
+        the cached list.
 
         Returns:
-            list: A cache of the topics as obtained from calling the private method
-            `_topics`.
+            list[str]: A cache of the topics.
 
         """
         if "topics" not in self.cache:
@@ -407,8 +408,8 @@ class CHM:
 
     def _topics(self):
         """
-        Within a `CHM` class takes an `Entry` object as input and returns a new
-        `Entry` object with additional properties based on the original input.
+        Recursively traverses through the file's entries and returns an Entry
+        object containing the topics found in the file.
 
         """
         for e in self.entries():
@@ -424,12 +425,10 @@ class CHM:
     # use first page as deftopic. Note: without heading slash
     def deftopic(self):
         """
-        In the `CHM` class determines whether a given topic has already been defined
-        in the cache and returns the cached value if it exists, or calls the
-        `_deftopic` method to create a new definition otherwise.
+        Sets or retrieves a topic value from a cache based on the key "deftopic".
 
         Returns:
-            object: Stored in a cache for future use.
+            object: A result of calling the `_deftopic` internal method.
 
         """
         if "deftopic" not in self.cache:
@@ -438,9 +437,8 @@ class CHM:
 
     def _deftopic(self):
         """
-        In the CHM class checks if the input HTML file starts with a slash, and
-        if so, removes it and returns the remaining part in lowercase. If not, it
-        simply returns the HTML file in lowercase.
+        Modifies the file path of an HTML file by removing any leading slashes and
+        then lowercasing the resulting string.
 
         """
         if self.html_files()[0].startswith("/"):
@@ -450,12 +448,12 @@ class CHM:
     # Get frontpage name
     def frontpage(self):
         """
-        Determines if it has been called before, and if not, it calls its internal
-        method `_frontpage` to generate the front page content, then stores it in
-        the cache for future use.
+        Checks if the "frontpage" key exists in its cache, otherwise it calls the
+        `_frontpage` method and stores the result in the cache.
 
         Returns:
-            object: Cache entry containing a page to display as front page.
+            object: Determined by calling the internal method `_frontpage()` and
+            storing it in a cache.
 
         """
         if "frontpage" not in self.cache:
@@ -464,8 +462,10 @@ class CHM:
 
     def _frontpage(self):
         """
-        Determines the front page of a web application by checking if a given file
-        is the index file, and if so, creates a new index file with a numbered name.
+        Determines the URL of the front page (/) by iterating through a list of
+        files and selecting the first one with the filename "index.html". If the
+        front page is found, it renames the file to "index<index>.html" and
+        increments the index value. The final frontpage URL is returned.
 
         """
         frontpage = os.path.join("/", "index.html")
@@ -479,11 +479,11 @@ class CHM:
     # Get all templates files
     def templates(self):
         """
-        Retrieves a list of templates belonging to an instance of the `CHM` class
-        from its cache if it's not already stored, then returns the stored list.
+        Retrieves and caches a list of templates if not already cached, and returns
+        the cached list.
 
         Returns:
-            dict: A cache of templates.
+            list[str]: A cache of predefined templates for the current user.
 
         """
         if "templates" not in self.cache:
@@ -492,9 +492,9 @@ class CHM:
 
     def _templates(self):
         """
-        In the CHM class lists all files in a directory and filters them based on
-        whether they are already included in a list of entries, returning the
-        remaining files.
+        Lists all templates in a directory and filters them based on whether they
+        are already included in the project's entries. The filtered list is returned
+        as a list of file paths.
 
         """
         out = []
@@ -507,11 +507,11 @@ class CHM:
     # Get ToC levels
     def toclevels(self):
         """
-        In the `CHM` class returns a cached value or computes it from the `_toclevels`
-        method if it's not already in the cache.
+        Retrieves or calculates and stores the toclevels attribute value in the
+        object's cache, which is then returned upon subsequent calls.
 
         Returns:
-            dict: A cache of toclevels for the given instance of the class.
+            list[str]: A cached result of calling the `_toclevels()` method.
 
         """
         if "toclevels" not in self.cache:
@@ -520,9 +520,9 @@ class CHM:
 
     def _toclevels(self):
         """
-        Counts the number of topics at each level in a given hierarchy and returns
-        the maximum level reached or the total number of topics if it exceeds the
-        maximum allowed level.
+        Determines the maximum level of toc recursively by feeding the topic tree
+        with the decode "latin-1" and counting the number of topics exceeding the
+        specified limit.
 
         """
         counter = TOCCounter()
@@ -535,17 +535,16 @@ class CHM:
 
     def get_template(self, name):
         """
-        In the `CHM` class retrieves an HTML template based on the input `name`
-        and replaces placeholders with class variables values, returning the
-        substituted template as a string.
+        Retrieves an HTML template based on the input `name`, opening and reading
+        the relevant template file and passing parameters to a Template instance
+        for substitution.
 
         Args:
-            name (str): Used to specify the name of the template to be loaded from
-                the templates directory.
+            name (str): Used to specify the template to be rendered.
 
         Returns:
-            stringTemplate: A instance of class `string.Template` that has been
-            filled with placeholders substituted with values from a dictionary.
+            str: A modified version of an HTML template file based on the input
+            parameter `name`.
 
         """
         if name == self.frontpage():
@@ -565,13 +564,12 @@ class CHM:
 
     def process_templates(self, destdir="."):
         """
-        Writes HTML files and icons to a specified directory based on templates
-        and frontpage.
+        Writes HTML templates to a specified destination directory and copies icons
+        to a subdirectory within the destined directory.
 
         Args:
-            destdir (str): Used to specify the directory where the templates are
-                written. It has an initial value of ".", which means the current
-                working directory.
+            destdir (str | Path): Used to specify the directory where the generated
+                HTML files will be written.
 
         """
         for template in self.templates():
@@ -590,20 +588,19 @@ class CHM:
     def extract_entry(self, entry, output_file, destdir=".", correct=False):
         # process output entry, remove first '/' in entry name
         """
-        Takes an entry object, an output file path, and a flag for correctness or
-        not, and creates or overwrites the corresponding entry file in the specified
-        directory with the correct or incorrect content respectively.
+        Extracts an entry from a source file and saves it to a specified output
+        file, creating directories as needed.
 
         Args:
-            entry (Entry): Passed as an argument to the function. It represents
-                an entry in a file or directory that needs to be extracted.
-            output_file (str): Used to specify the output file for writing extracted
-                entries.
-            destdir (str): Used to specify the directory where the output file
-                will be saved. It can be either an absolute path or a relative
-                path from the current working directory.
-            correct (bool): Used to indicate whether the entry should be corrected
-                or not during extraction.
+            entry (Entry | str): Used to specify the entry to be extracted from
+                the source code.
+            output_file (str | Path): Used to specify the output file path for the
+                extracted entry.
+            destdir (str | List[str]): Used to specify the directory where the
+                extracted entry will be saved. It can either be a single directory
+                path or a list of directories, separated by ",".
+            correct (bool): Used to indicate whether the output file should be
+                created with correct or incorrect framing.
 
         """
         fname = output_file.lower().replace("/", "", 1)
@@ -636,18 +633,17 @@ class CHM:
 
     def extract_entries(self, entries=[], destdir=".", correct=False):
         """
-        In the `CHM` class takes an optional list of entries, searches for malicious
-        names, and extracts entries matching a regular expression pattern or a
-        parent directory.
+        Extracts entries from a list and performs actions based on the entry's
+        format and contents, including checking for malicious names and raising
+        errors if necessary.
 
         Args:
-            entries (listarray): An array of strings representing files or paths
-                to files that need to be extracted.
-            destdir (str): Used to specify the directory where the extracted entries
-                will be saved. It has a default value of ".".
+            entries (List[str]): Used to store the entries to be extracted from
+                the input file.
+            destdir (str): Used to specify the destination directory for extracted
+                entries.
             correct (bool): Used to indicate whether the entry should be extracted
-                with its original path or as a relative path within the destination
-                directory.
+                or not.
 
         """
         for e in entries:
@@ -662,12 +658,14 @@ class CHM:
 
     def extract(self, destdir):
         """
-        Performs an action on a destination directory, creating it if it does not
-        exist and executing actions related to its entries and templates.
+        Performs the following tasks:
+        * Creates the destination directory if it does not exist.
+        * Extracts entries from the CHM file to the destination directory.
+        * Processes templates in the destination directory.
 
         Args:
-            destdir (str): Used to specify the destination directory for the
-                extraction of the entries from the jar file.
+            destdir (str): Used to specify the directory where the extracted files
+                will be saved.
 
         """
         try:
@@ -683,13 +681,12 @@ class CHM:
 
     def dump_html(self, output=sys.stdout):
         """
-        Within the `CHM` class iterates over a list of HTML files and prints the
-        contents of each file to the output stream if it does not match a specific
-        regular expression pattern.
+        Iterates through a list of HTML files and prints out the content of each
+        file, filtered by a regular expression pattern to exclude certain files.
 
         Args:
-            output (object): Used to represent the destination for printing the
-                output of the function.
+            output (FileIO | str): Used to write the output of the function to a
+                file or the console.
 
         """
         for e in self.html_files():
@@ -705,11 +702,12 @@ class CHM:
 
     def chm2text(self, output=sys.stdout):
         """
-        Processes CHM files by calling the `chmtotext` command with input from an
-        Entry object, and outputting the result to the specified destination.
+        Processes HTML files and converts them into plain text format using the
+        `chmtotext` command.
 
         Args:
-            output (object): Used to specify the destination for the generated text.
+            output (Optional[io.Text]): Used to specify the destination for the
+                generated text.
 
         """
         for e in self.html_files():
@@ -727,14 +725,15 @@ class CHM:
 
     def htmldoc(self, output, format=Action.CHM2HTML):
         """
-        Extracts CHM content into a temporary directory, processes images, and
-        generates HTML or PDF output using the specified format and options.
+        Extracts CHM content, creates a temporary directory, and converts it to
+        HTML or PDF format using the specified options and executes the resulting
+        HTML document.
 
         Args:
-            output (str): Used to specify the output file path for the generated
-                HTML document, which can be a directory or a file name.
-            format (str): Used to specify the output format of the documentation,
-                which can be either CHM2HTML or CHM2PDF.
+            output (Union[str, Path]): Used to specify the output file path for
+                the generated HTML document.
+            format (Action.CHM2HTML | Action.CHM2PDF): Used to specify the output
+                format of the document, either CHM2HTML or CHM2PDF.
 
         """
         # Extract CHM content into temporary directory
@@ -780,18 +779,18 @@ class CHM:
 
 class Entry(object):
     """
-    Manages entry content, including reading and manipulating links, adding restore
-    framing JavaScript, and returning the corrected entry content.
+    Manages entry content, including reading and manipulating links, adding framing
+    JavaScript, and correcting certain issues with HTML entities and filenames.
 
     Attributes:
-        source (object): Used to store a string containing the entry's content.
+        source (object): Used to store the entry's source content.
         name (str): Used to store the name of the entry.
-        filename_case (str): Used to modify the file name in lower case when
-            searching for links.
-        restore_framing (bool): Used to specify whether the framing links should
-            be restored or not.
-        frontpage (ospathbasename): Used to specify the name of the file containing
-            the front page content for the entry.
+        filename_case (str): Used to specify whether the entry filename should be
+            lowercased when searching for links within its content.
+        restore_framing (bool): Used to enable or disable restoring framing for
+            links within the entry content.
+        frontpage (str): Used to specify the name of the front page file for framing
+            links.
 
     """
 
@@ -805,20 +804,21 @@ class Entry(object):
     ):
         # Entry source
         """
-        Of the `Entry` class initializes attributes with user-provided values:
-        source, name, filename_case, restore_framing, and frontpage.
+        Initializes instance variables source, name, filename_case, restore_framing,
+        and frontpage.
 
         Args:
-            source (object): Used to store the source code for a web page or document.
-            name (str): Assigned the value passed as argument during initialization,
-                representing the name of the page or resource being initialized.
-            filename_case (str): Used to specify the case of the file name, which
-                can be "lower", "upper", or "title".
-            restore_framing (int): 1 by default, indicating that the frame should
-                be restored when loading the HTML file.
-            frontpage (ospathbasename): Set to the value of "index.html" by default,
-                indicating that the initial front page of the web application
-                should be the file named "index.html".
+            source (str): Assigned to the attribute of the same name, storing the
+                initial value of the object.
+            name (str): Used to assign a name to the framing element.
+            filename_case (str): Used to set the case of the filename when restoring
+                framing.
+            restore_framing (bool): Used to restore the original framing of the
+                HTML document when it was parsed, providing more accurate results
+                for some parsers.
+            frontpage (str | str): Used to specify the name of the HTML file that
+                serves as the front page of the website, with the default value
+                being "index.html".
 
         """
         self.source = source
@@ -834,15 +834,17 @@ class Entry(object):
 
     def lower_links(self, text):
         """
-        Replaces certain words in a given string with their lowercase versions,
-        specifically the keywords `href` and `src`.
+        Replaces all occurrences of href or src attributes in a given string with
+        their lowercase versions, preserving the rest of the string unchanged.
 
         Args:
-            text (str): A string of text to be processed for lowercase links.
+            text (str): The string to be processed with regular expression
+                substitution for lowercasing hyperlink attributes.
 
         Returns:
-            str: The result of applying a regular expression to the input string
-            using a lambda function.
+            str: The result of replacing all occurrence of href or src with their
+            corresponding lowercase version inside a given string using a lambda
+            function.
 
         """
         return re.sub(
@@ -853,17 +855,17 @@ class Entry(object):
 
     def add_restoreframing_js(self, name, text):
         """
-        Modifies JavaScript code based on the `name` parameter, replacing certain
-        characters and generating a new script tag with depth-dependent modifications.
+        Modifies the provided string `text` by adding JavaScript code that displays
+        a link to the framing page for the current entry when the page is loaded.
 
         Args:
-            name (str): Used to generate a script tag for restoring framing pages.
-            text (HTML): Modified by replacing any occurrence of `<body>` with the
-                encoded JavaScript code.
+            name (str): Rewritten to exclude any forward slashes and then passed
+                through a depth counter to generate the script for framing restoration.
+            text (str): Passed as an argument to re.sub method.
 
         Returns:
-            str: A modified version of the input string `text`, with certain
-            elements replaced or removed using regular expressions and string concatenation.
+            str: A modified version of the original text, where certain parts have
+            been replaced with JavaScript code for framing functionality.
 
         """
         name = re.sub("/+", "/", name)
@@ -882,12 +884,12 @@ if (window.name != "content")
 
     def correct(self):
         """
-        Reads data from an entry, modifies it by removing certain tags and strings,
-        and returns the modified data.
+        Modifies an input string based on its name and filename case, replacing
+        certain HTML tags and links related to Team Lib.
 
         Returns:
-            str: A modified version of the input data, with certain elements removed
-            or replaced.
+            str: The modified string after applying the given regular expressions
+            to remove unwanted elements.
 
         """
         data = self.read()
@@ -916,13 +918,12 @@ if (window.name != "content")
 
     def get(self):
         """
-        Retrieves entry content by reading its file and performing modifications
-        based on the object's properties, such as lowercasing links and restoring
-        framing HTML tags if necessary. It returns the modified content or an empty
-        string if none exists.
+        Reads the entry content, modifies it based on various options, and returns
+        the modified content or None if no modification is needed.
 
         Returns:
-            str: A string containing the entry content.
+            str: Either the contents of the entry or a modified version of it
+            depending on various conditions and configuration options.
 
         """
         # read entry content
