@@ -1300,26 +1300,26 @@
     "path": "archmage/__init__.py",
     "content": {
       "structured": {
-        "description": "Two variables: `user_config` and `config`. The `user_config` variable stores the path to a configuration file located in the user's home directory, while the `config` variable references a system-wide configuration file. The code also defines a function called `file2dir`, which takes a filename as input and returns the corresponding directory name, including the file extension for an HTML version of the file.",
+        "description": "A function `file2dir` that takes a filename as input and returns the corresponding directory name. The function uses the `os` and `pkg_resources` packages to access file paths and resource filenames. The `os` package is used for path manipulation, while the `pkg_resources` package provides a way to access resource files in Python.",
         "items": [
           {
-            "id": "aaf53e27-f16b-70a3-5e41-ffaf3875880e",
+            "id": "d7b91bd6-f181-5ca8-3548-42b7b305cea8",
             "ancestors": [],
-            "description": "Splits the input file name into directory and filename components, concatenates the directory component with underscores and the string \"html\", and returns the resulting directory path.",
+            "description": "Takes a filenames as input and returns its corresponding directory name by splitting the filename using dot and then combining the original directory name with \"html\".",
             "params": [
               {
                 "name": "filename",
                 "type_name": "str",
-                "description": "A path to a file that needs to be converted into a directory."
+                "description": "Used to specify the name of the file whose directory path is being generated."
               }
             ],
             "returns": {
               "type_name": "str",
-              "description": "The directory name of a file based on its basename and an additional prefix of \"_html\"."
+              "description": "The directory name of a file based on its base name and the suffix \".html\"."
             },
             "usage": {
               "language": "python",
-              "code": "file = 'some_filename.txt'\ndirname = file2dir(file)\nprint(dirname)\n# Output: some_filename_html\n",
+              "code": "# Example of using the function file2dir\nfilename = \"example.html\"\ndirname = file2dir(filename)\nprint(dirname) # prints \"example_html\"\n",
               "description": ""
             },
             "name": "file2dir",

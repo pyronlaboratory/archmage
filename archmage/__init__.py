@@ -33,16 +33,16 @@ else:
 
 def file2dir(filename):
     """
-    Splits the input file name into directory and filename components, concatenates
-    the directory component with underscores and the string "html", and returns
-    the resulting directory path.
+    Takes a filenames as input and returns its corresponding directory name by
+    splitting the filename using dot and then combining the original directory
+    name with "html".
 
     Args:
-        filename (str): A path to a file that needs to be converted into a directory.
+        filename (str): Used to specify the name of the file whose directory path
+            is being generated.
 
     Returns:
-        str: The directory name of a file based on its basename and an additional
-        prefix of "_html".
+        str: The directory name of a file based on its base name and the suffix ".html".
 
     """
     dirname = filename.rsplit(".", 1)[0] + "_" + "html"
